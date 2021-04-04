@@ -15,7 +15,7 @@ public class OperadorSelector extends Operador {
     @Override
     public void mousePressed(MouseEvent e) {
         Selector selector = ApplicationController.INSTANCE.getSeletor();
-        if (selector == null) { // deveria ser com estados
+        if (selector == null || selector.state == selector.state.FINISH) { // deveria ser com estados
             System.out.println("Selector: CREATED");
             ApplicationController.INSTANCE.createSelector(e.getX(), e.getY());
         }
