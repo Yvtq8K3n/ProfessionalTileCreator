@@ -42,6 +42,7 @@ public class ApplicationView extends JFrame implements PropertyChangeListener {
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
+        System.out.println("REPAITING");
         repaint();
     }
 }

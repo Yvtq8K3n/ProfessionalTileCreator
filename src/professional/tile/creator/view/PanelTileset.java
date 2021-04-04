@@ -25,12 +25,12 @@ public class PanelTileset extends JPanel {
 
         //Panel2
         tileRepresentation = new TileRepresentation();
-
+        JScrollPane scrollPanel = new JScrollPane(tileRepresentation);
 
         //MainJPanel
         setLayout(new BorderLayout());
         add(tilesetMenu, BorderLayout.PAGE_START);
-        add(tileRepresentation, BorderLayout.CENTER);
+        add(scrollPanel, BorderLayout.CENTER);
     }
 
 }

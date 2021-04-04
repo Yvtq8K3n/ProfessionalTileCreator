@@ -1,6 +1,7 @@
 package professional.tile.creator.controller;
 
 
+import professional.tile.creator.model.Selector;
 import professional.tile.creator.model.Tileset;
 import professional.tile.creator.view.ApplicationView;
 
@@ -12,6 +13,7 @@ public enum ApplicationController {
 
     private Tileset tileset;
     private ApplicationView applicationView;
+    private Selector seletor;
 
     public void loadTileset(BufferedImage tileset){
         this.tileset = new Tileset(tileset);
@@ -31,5 +33,21 @@ public enum ApplicationController {
         this.applicationView = applicationView;
     }
 
+    public ApplicationView getApplicationView() {
+        return applicationView;
+    }
 
+    public void createSelector(int x, int y){
+        seletor = new Selector(x, y);
+        seletor.addPropertyChangeListener(applicationView);
+        applicationView.repaint();
+    }
+
+    public Selector getSeletor() {
+        return seletor;
+    }
+
+    public void setSeletor(Selector seletor) {
+        this.seletor = seletor;
+    }
 }
