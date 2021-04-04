@@ -1,19 +1,38 @@
 package professional.tile.creator.model;
 
-import javafx.scene.image.Image;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 
 public class Tileset {
-    Image tileset;
+    private BufferedImage image;
+    private PropertyChangeSupport changes = new PropertyChangeSupport(this);
 
-    public Tileset(Image tileset) {
-        this.tileset = tileset;
+    public Tileset(BufferedImage image) {
+        changes.firePropertyChange("image", null, image);
+        this.image = image;
     }
 
-    public Image getTileset() {
-        return tileset;
+    public BufferedImage getImage() {
+        return image;
     }
 
-    public void setTileset(Image tileset) {
-        this.tileset = tileset;
+    public void setImage(BufferedImage image) {
+        changes.firePropertyChange("image",  this.image, image);
+        this.image = image;
+    }
+
+    public Boolean hasImage(){
+        return image != null;
+    }
+
+    public void addPropertyChangeListener(PropertyChangeListener l) {
+        changes.addPropertyChangeListener(l);
+    }
+
+    public void removePropertyChangeListener(PropertyChangeListener l) {
+        changes.removePropertyChangeListener(l);
     }
 }

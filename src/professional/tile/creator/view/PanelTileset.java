@@ -1,31 +1,36 @@
 package professional.tile.creator.view;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 
 public class PanelTileset extends JPanel {
 
-   public PanelTileset() {
+
+    TilesetMenu tilesetMenu;
+    TileRepresentation tileRepresentation;
+
+
+    PanelTileset() {
         initComponents();
    }
 
     public void initComponents(){
         //Panel1
-        JPanel panel1 = new JPanel();
-        panel1.setBackground(Color.red);
-        panel1.setPreferredSize(new Dimension(450, 50));
+        tilesetMenu = new TilesetMenu();
+        tilesetMenu.setPreferredSize(new Dimension(384, 40));
 
         //Panel2
-        JPanel panel2 = new JPanel();
-        panel2.setBackground(Color.green);
-        panel2.setPreferredSize(new Dimension(450, 450));
+        tileRepresentation = new TileRepresentation();
+
 
         //MainJPanel
-        JPanel mainJPanel = new JPanel();
-        mainJPanel.setLayout(new BorderLayout());
-        mainJPanel.add(panel1, BorderLayout.PAGE_START);
-        mainJPanel.add(panel2, BorderLayout.CENTER);
-        add(mainJPanel);
+        setLayout(new BorderLayout());
+        add(tilesetMenu, BorderLayout.PAGE_START);
+        add(tileRepresentation, BorderLayout.CENTER);
     }
 
 }
