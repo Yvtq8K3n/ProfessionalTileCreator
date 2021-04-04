@@ -16,8 +16,10 @@ public class OperadorSelector extends Operador {
     public void mousePressed(MouseEvent e) {
         Selector selector = ApplicationController.INSTANCE.getSeletor();
         if (selector == null) { // deveria ser com estados
+            System.out.println("Selector: CREATED");
             ApplicationController.INSTANCE.createSelector(e.getX(), e.getY());
         }
+
     }
 
     @Override
@@ -32,9 +34,9 @@ public class OperadorSelector extends Operador {
         if (selector != null) { // deveria ser com estados
             if (selector.state == Selector.State.CREATED
                     || selector.state == Selector.State.CREATED)
-            System.out.println("Resizing selector");
-            selector.setEndX(e.getX()-selector.getStartX());
-            selector.setEndY(e.getY()-selector.getStartY());
+            System.out.println("Selector: Resizing");
+            selector.setEndX(e.getX());
+            selector.setEndY(e.getY());
             selector.state = Selector.State.REZISING;
         }
 
@@ -49,6 +51,7 @@ public class OperadorSelector extends Operador {
     public void mouseReleased(MouseEvent e) {
         Selector selector = ApplicationController.INSTANCE.getSeletor();
         if (selector != null) {
+            System.out.println("SELECTOR: FINISHED");
             selector.state = Selector.State.FINISH;
         }
     }

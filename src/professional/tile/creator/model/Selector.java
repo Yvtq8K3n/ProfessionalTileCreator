@@ -30,8 +30,8 @@ public class Selector {
         this();
         this.startX = rounding(startX);
         this.startY = rounding(startY);
-        this.endX = startX + baseBlock;
-        this.endY = startY + baseBlock;
+        this.endX = this.startX + baseBlock;
+        this.endY = this.startY + baseBlock;
     }
 
     public int getStartX() {
@@ -47,8 +47,8 @@ public class Selector {
     }
 
     public void setEndX(int endX) {
-        int newValue = rounding(endX);
-        if (newValue < baseBlock) return;
+        int newValue = rounding(endX+DEFAULT_ROUNDING/2);
+        if (newValue - startX < baseBlock) return;
         changes.firePropertyChange("endX", this.endX, newValue);
         this.endX = newValue;
     }
@@ -58,8 +58,9 @@ public class Selector {
     }
 
     public void setEndY(int endY) {
-        int newValue = rounding(endY);
-        if (newValue < baseBlock) return;
+        int newValue = rounding(endY+DEFAULT_ROUNDING/2);
+        System.out.println(newValue - startY < baseBlock);
+        if (newValue - startY < baseBlock) return;
         changes.firePropertyChange("endY", this.endY, newValue);
         this.endY = newValue;
     }
