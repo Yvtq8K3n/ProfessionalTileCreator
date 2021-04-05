@@ -1,8 +1,8 @@
-package professional.tile.creator;
+package professional.tile.creator.controller;
 
 import java.awt.event.*;
 
-public class Operador implements MouseListener, MouseMotionListener, MouseWheelListener {
+public class Operator implements MouseListener, MouseMotionListener, MouseWheelListener {
     @Override
     public void mouseClicked(MouseEvent e) {
 

@@ -1,15 +1,15 @@
-package professional.tile.creator;
+package professional.tile.creator.controller;
 
 import professional.tile.creator.Exceptions.OutOfBoundsException;
-import professional.tile.creator.controller.ApplicationController;
 import professional.tile.creator.model.Selector;
 import professional.tile.creator.model.Tileset;
 
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
 
-public class OperadorSelector extends Operador {
+public class OperatorSelector extends Operator {
 
-    public OperadorSelector(){
+    public OperatorSelector(){
 
     }
 
@@ -17,7 +17,7 @@ public class OperadorSelector extends Operador {
     public void mousePressed(MouseEvent e) {
         Tileset tileset = ApplicationController.INSTANCE.getTileset();
         if (tileset !=null){
-            Selector selector = ApplicationController.INSTANCE.getSeletor();
+            Selector selector = ApplicationController.INSTANCE.getSelector();
             if (selector == null || selector.state == selector.state.FINISH) { // deveria ser com estados
                 System.out.println("Selector: CREATED");
                 try {
@@ -37,7 +37,7 @@ public class OperadorSelector extends Operador {
     @Override
     public void mouseDragged(MouseEvent e) {
         super.mouseMoved(e);
-        Selector selector = ApplicationController.INSTANCE.getSeletor();
+        Selector selector = ApplicationController.INSTANCE.getSelector();
         if (selector != null) { // deveria ser com estados
             if (selector.state == Selector.State.CREATED
                     || selector.state == Selector.State.RESIZING){
@@ -60,10 +60,21 @@ public class OperadorSelector extends Operador {
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        Selector selector = ApplicationController.INSTANCE.getSeletor();
+        Selector selector = ApplicationController.INSTANCE.getSelector();
         if (selector != null) {
-            System.out.println("SELECTOR: FINISHED");
+            System.out.println("Selector: FINISHED");
             selector.state = Selector.State.FINISH;
+        }
+    }
+
+    @Override
+    public void mouseWheelMoved(MouseWheelEvent e) {
+        System.out.println("Scrolled");
+        int notches = e.getWheelRotation();
+        if (notches < 0) {
+            ApplicationController.INSTANCE.increaseScaleFactor();
+        } else {
+            ApplicationController.INSTANCE.reduceScaleFactor();
         }
     }
 

@@ -1,12 +1,15 @@
 package professional.tile.creator.model;
 
+import javafx.scene.layout.TilePane;
 import professional.tile.creator.Exceptions.OutOfBoundsException;
 import professional.tile.creator.controller.ApplicationController;
 
+import java.awt.image.BufferedImage;
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
-public class Selector {
+public class Selector implements PropertyChangeListener{
     private static final int DEFAULT_ROUNDING = 8;
     private static final int BLOCK_SIZE_ROUNDING = 16;
 
@@ -19,28 +22,32 @@ public class Selector {
     private int startX, startY;
     private int endX, endY;
     private int baseBlock;
+    private int baseBlockScaled;
     public State state;
     private PropertyChangeSupport changes;
 
     private Selector() {
         changes = new PropertyChangeSupport(this);
-        baseBlock = BLOCK_SIZE_ROUNDING;
+        baseBlock = DEFAULT_ROUNDING;
         state = State.CREATED;
     }
 
     public Selector(int startX, int startY) throws OutOfBoundsException {
         this();
-        Tileset tileset = ApplicationController.INSTANCE.getTileset();
+        Tileset tileset = getTileset();
+        int scale = tileset.getScaleFactor();
+        this.baseBlockScaled = baseBlock * scale;
+
         //Making sure start point is created within the bounds of the tileset
         this.startX = rounding(startX);
-        if ( this.startX > tileset.getWidth())
+        if ( this.startX > getTileset().getWidth() * scale)
             throw new OutOfBoundsException(this.getClass().getSimpleName());
         this.startY = rounding(startY);
-        if ( this.startY > tileset.getHeight())
+        if ( this.startY > tileset.getHeight() * scale)
             throw new OutOfBoundsException(this.getClass().getSimpleName());
 
-        this.endX = this.startX + baseBlock;
-        this.endY = this.startY + baseBlock;
+        this.endX = this.startX + baseBlockScaled;
+        this.endY = this.startY + baseBlockScaled;
     }
 
     public int getStartX() {
@@ -56,20 +63,21 @@ public class Selector {
     }
 
     public void setEndX(int endX) throws OutOfBoundsException {
-        int newValue;
-        Tileset tileset = ApplicationController.INSTANCE.getTileset();
+        int scale = getTileset().getScaleFactor();
+        BufferedImage tileset = getTileset().getScaledImage();
 
-        //Identifies the Lowest Point coordinate
+        int newValue;
+        //Identify the Lowest X coordinate in order to use it as point of reference
         if (endX > startX) {
-            //Round to the nearest multiple of base block(default: 8)
-            newValue = rounding(endX + DEFAULT_ROUNDING / 2);
-            if (newValue - startX < baseBlock
+            //Force selection to only have DEFAULT_ROUNDING blocks
+            newValue = rounding(endX + (DEFAULT_ROUNDING*scale) / 2);
+            if (newValue - startX < baseBlockScaled
                     || newValue > tileset.getWidth())
                 throw new OutOfBoundsException(this.getClass().getSimpleName());
         }else{
-            //Round to the nearest multiple of base block(default: 8)
-            newValue = rounding(endX + (DEFAULT_ROUNDING/2)*3);
-            if (startX - newValue  < baseBlock || newValue < 0)
+            //Force selection to only have DEFAULT_ROUNDING blocks
+            newValue = rounding(endX + (DEFAULT_ROUNDING*scale/2)*3);
+            if (startX - newValue  < baseBlockScaled || newValue < 0)
                 throw new OutOfBoundsException(this.getClass().getSimpleName());
         }
 
@@ -77,24 +85,22 @@ public class Selector {
         this.endX = newValue;
     }
 
-    public int getEndY() {
-        return endY;
-    }
-
     public void setEndY(int endY) throws OutOfBoundsException {
-        int newValue;
-        Tileset tileset = ApplicationController.INSTANCE.getTileset();
+        int scale = getTileset().getScaleFactor();
+        BufferedImage tileset = getTileset().getScaledImage();
 
-        //Identifies the Lowest Point coordinate
+        int newValue;
+        //Identify the Lowest Y coordinate in order to use it as point of reference
         if (endY > startY) {
-            newValue = rounding(endY + DEFAULT_ROUNDING/2);
-            if (newValue - startY < baseBlock
+            ///Force selection to only have DEFAULT_ROUNDING blocks
+            newValue = rounding(endY + DEFAULT_ROUNDING*scale/2);
+            if (newValue - startY < baseBlockScaled
                     || newValue > tileset.getHeight())
                 throw new OutOfBoundsException(this.getClass().getSimpleName());
         }else{
-            //Round to the nearest multiple of base block(default: 8)
-            newValue = rounding(endY + (DEFAULT_ROUNDING/2)*3);
-            if (startY - newValue  < baseBlock || newValue < 0)
+            //Force selection to only have DEFAULT_ROUNDING blocks
+            newValue = rounding(endY + (DEFAULT_ROUNDING*scale/2)*3);
+            if (startY - newValue  < baseBlockScaled || newValue < 0)
                 throw new OutOfBoundsException(this.getClass().getSimpleName());
         }
         changes.firePropertyChange("endY", this.endY, newValue);
@@ -113,8 +119,28 @@ public class Selector {
         return new Point(width, height);
     }
 
-    public void getInitialY(){
+    /**
+     * @param evt
+     * When the tileset factor value changes, the selector will automatically resize
+     */
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        Tileset tileset = getTileset();
+        BufferedImage scaledImage = getTileset().getScaledImage();
+        int scale = getTileset().getScaleFactor();
+        baseBlockScaled = baseBlock * scale;
+        startX = startX * tileset.getWidth() / scaledImage.getWidth() * scale;
+        startY = startY * tileset.getHeight() / scaledImage.getHeight() * scale;
+        endX = endX * tileset.getWidth() / scaledImage.getWidth() * scale;
+        endY = endY * tileset.getHeight() / scaledImage.getHeight() * scale;
+    }
 
+    private int rounding(int value){
+        return baseBlockScaled * Math.round(value/ baseBlockScaled);
+    }
+
+    private Tileset getTileset(){
+        return ApplicationController.INSTANCE.getTileset();
     }
 
     public void addPropertyChangeListener(PropertyChangeListener l) {
@@ -125,8 +151,4 @@ public class Selector {
         changes.removePropertyChangeListener(l);
     }
 
-
-    private int rounding(int value){
-        return baseBlock * Math.round(value/ baseBlock);
-    }
 }
