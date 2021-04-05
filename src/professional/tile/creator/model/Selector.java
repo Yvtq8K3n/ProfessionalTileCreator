@@ -22,16 +22,23 @@ public class Selector {
     public State state;
     private PropertyChangeSupport changes;
 
-    public Selector() {
+    private Selector() {
         changes = new PropertyChangeSupport(this);
         baseBlock = BLOCK_SIZE_ROUNDING;
         state = State.CREATED;
     }
 
-    public Selector(int startX, int startY) {
+    public Selector(int startX, int startY) throws OutOfBoundsException {
         this();
+        Tileset tileset = ApplicationController.INSTANCE.getTileset();
+        //Making sure start point is created within the bounds of the tileset
         this.startX = rounding(startX);
+        if ( this.startX > tileset.getWidth())
+            throw new OutOfBoundsException(this.getClass().getSimpleName());
         this.startY = rounding(startY);
+        if ( this.startY > tileset.getHeight())
+            throw new OutOfBoundsException(this.getClass().getSimpleName());
+
         this.endX = this.startX + baseBlock;
         this.endY = this.startY + baseBlock;
     }

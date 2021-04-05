@@ -1,6 +1,7 @@
 package professional.tile.creator.controller;
 
 
+import professional.tile.creator.Exceptions.OutOfBoundsException;
 import professional.tile.creator.model.Selector;
 import professional.tile.creator.model.Tileset;
 import professional.tile.creator.view.ApplicationView;
@@ -45,7 +46,7 @@ public enum ApplicationController {
         return applicationView;
     }
 
-    public void createSelector(int x, int y){
+    public void createSelector(int x, int y) throws OutOfBoundsException {
         seletor = new Selector(x, y);
         seletor.addPropertyChangeListener(applicationView);
         applicationView.repaint();

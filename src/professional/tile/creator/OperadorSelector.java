@@ -20,7 +20,11 @@ public class OperadorSelector extends Operador {
             Selector selector = ApplicationController.INSTANCE.getSeletor();
             if (selector == null || selector.state == selector.state.FINISH) { // deveria ser com estados
                 System.out.println("Selector: CREATED");
-                ApplicationController.INSTANCE.createSelector(e.getX(), e.getY());
+                try {
+                    ApplicationController.INSTANCE.createSelector(e.getX(), e.getY());
+                } catch (OutOfBoundsException ex) {
+                    System.out.println(ex.getMessage());
+                }
             }
         }
     }
@@ -37,13 +41,18 @@ public class OperadorSelector extends Operador {
         if (selector != null) { // deveria ser com estados
             if (selector.state == Selector.State.CREATED
                     || selector.state == Selector.State.RESIZING){
-                System.out.println("Selector: RESIZING");
                 try {
                     selector.setEndX(e.getX());
+                } catch (OutOfBoundsException ex) {
+                    System.out.println(ex.getMessage());
+                }
+                try {
                     selector.setEndY(e.getY());
                 } catch (OutOfBoundsException ex) {
                     System.out.println(ex.getMessage());
                 }
+
+                System.out.println("Selector: RESIZING");
                 selector.state = Selector.State.RESIZING;
             }
         }
