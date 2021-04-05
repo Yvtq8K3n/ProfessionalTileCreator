@@ -1,7 +1,9 @@
 package professional.tile.creator;
 
+import professional.tile.creator.Exceptions.OutOfBoundsException;
 import professional.tile.creator.controller.ApplicationController;
 import professional.tile.creator.model.Selector;
+import professional.tile.creator.model.Tileset;
 
 import java.awt.event.MouseEvent;
 
@@ -13,12 +15,14 @@ public class OperadorSelector extends Operador {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        Selector selector = ApplicationController.INSTANCE.getSeletor();
-        if (selector == null || selector.state == selector.state.FINISH) { // deveria ser com estados
-            System.out.println("Selector: CREATED");
-            ApplicationController.INSTANCE.createSelector(e.getX(), e.getY());
+        Tileset tileset = ApplicationController.INSTANCE.getTileset();
+        if (tileset !=null){
+            Selector selector = ApplicationController.INSTANCE.getSeletor();
+            if (selector == null || selector.state == selector.state.FINISH) { // deveria ser com estados
+                System.out.println("Selector: CREATED");
+                ApplicationController.INSTANCE.createSelector(e.getX(), e.getY());
+            }
         }
-
     }
 
     @Override
@@ -32,11 +36,16 @@ public class OperadorSelector extends Operador {
         Selector selector = ApplicationController.INSTANCE.getSeletor();
         if (selector != null) { // deveria ser com estados
             if (selector.state == Selector.State.CREATED
-                    || selector.state == Selector.State.CREATED)
-            System.out.println("Selector: Resizing");
-            selector.setEndX(e.getX());
-            selector.setEndY(e.getY());
-            selector.state = Selector.State.RESIZING;
+                    || selector.state == Selector.State.RESIZING){
+                System.out.println("Selector: RESIZING");
+                try {
+                    selector.setEndX(e.getX());
+                    selector.setEndY(e.getY());
+                } catch (OutOfBoundsException ex) {
+                    System.out.println(ex.getMessage());
+                }
+                selector.state = Selector.State.RESIZING;
+            }
         }
     }
 

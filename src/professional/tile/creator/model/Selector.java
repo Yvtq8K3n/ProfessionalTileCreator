@@ -1,10 +1,12 @@
 package professional.tile.creator.model;
 
+import professional.tile.creator.Exceptions.OutOfBoundsException;
+import professional.tile.creator.controller.ApplicationController;
+
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
 public class Selector {
-
     private static final int DEFAULT_ROUNDING = 8;
     private static final int BLOCK_SIZE_ROUNDING = 16;
 
@@ -46,18 +48,22 @@ public class Selector {
         return endX;
     }
 
-    public void setEndX(int endX) {
+    public void setEndX(int endX) throws OutOfBoundsException {
         int newValue;
+        Tileset tileset = ApplicationController.INSTANCE.getTileset();
 
         //Identifies the Lowest Point coordinate
         if (endX > startX) {
             //Round to the nearest multiple of base block(default: 8)
             newValue = rounding(endX + DEFAULT_ROUNDING / 2);
-            if (newValue - startX < baseBlock) return;
+            if (newValue - startX < baseBlock
+                    || newValue > tileset.getWidth())
+                throw new OutOfBoundsException(this.getClass().getSimpleName());
         }else{
             //Round to the nearest multiple of base block(default: 8)
             newValue = rounding(endX + (DEFAULT_ROUNDING/2)*3);
-            if (startX - newValue  < baseBlock) return;
+            if (startX - newValue  < baseBlock || newValue < 0)
+                throw new OutOfBoundsException(this.getClass().getSimpleName());
         }
 
         changes.firePropertyChange("endX", this.endX, newValue);
@@ -68,17 +74,21 @@ public class Selector {
         return endY;
     }
 
-    public void setEndY(int endY) {
+    public void setEndY(int endY) throws OutOfBoundsException {
         int newValue;
+        Tileset tileset = ApplicationController.INSTANCE.getTileset();
 
         //Identifies the Lowest Point coordinate
         if (endY > startY) {
             newValue = rounding(endY + DEFAULT_ROUNDING/2);
-            if (newValue - startY < baseBlock) return;
+            if (newValue - startY < baseBlock
+                    || newValue > tileset.getHeight())
+                throw new OutOfBoundsException(this.getClass().getSimpleName());
         }else{
             //Round to the nearest multiple of base block(default: 8)
             newValue = rounding(endY + (DEFAULT_ROUNDING/2)*3);
-            if (startY - newValue  < baseBlock) return;
+            if (startY - newValue  < baseBlock || newValue < 0)
+                throw new OutOfBoundsException(this.getClass().getSimpleName());
         }
         changes.firePropertyChange("endY", this.endY, newValue);
         this.endY = newValue;

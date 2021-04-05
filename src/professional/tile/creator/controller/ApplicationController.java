@@ -25,6 +25,14 @@ public enum ApplicationController {
         return tileset;
     }
 
+    public int getWidth(){
+        return tileset.getImage().getWidth();
+    }
+
+    public int getHeight(){
+        return tileset.getImage().getHeight();
+    }
+
     public void setTileset(Tileset tileset) {
         this.tileset = tileset;
     }

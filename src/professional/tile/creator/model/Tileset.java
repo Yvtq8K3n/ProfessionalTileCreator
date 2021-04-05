@@ -24,6 +24,14 @@ public class Tileset {
         this.image = image;
     }
 
+    public int getWidth(){
+        return image.getWidth();
+    }
+
+    public int getHeight(){
+        return image.getHeight();
+    }
+
     public Boolean hasImage(){
         return image != null;
     }
