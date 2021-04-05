@@ -41,8 +41,8 @@ public class TileRepresentation extends JPanel implements MouseListener, MouseMo
             Selector selector = ApplicationController.INSTANCE.getSeletor();
             if (selector!=null){
                 g.setColor(Color.red);
-                g.drawRect(selector.getStartX(), selector.getStartY(),
-                        selector.getEndX()-selector.getStartX(), selector.getEndY()-selector.getStartY());
+               g.drawRect(selector.getLowestPoint().getX(), selector.getLowestPoint().getY(),
+                       selector.getDimensions().getX(), selector.getDimensions().getY());
             }
         }
     }

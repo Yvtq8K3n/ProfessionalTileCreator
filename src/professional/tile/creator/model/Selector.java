@@ -10,7 +10,7 @@ public class Selector {
 
     public enum State{
         CREATED,
-        REZISING,
+        RESIZING,
         FINISH
     }
 
@@ -47,8 +47,19 @@ public class Selector {
     }
 
     public void setEndX(int endX) {
-        int newValue = rounding(endX+DEFAULT_ROUNDING/2);
-        if (newValue - startX < baseBlock) return;
+        int newValue;
+
+        //Identifies the Lowest Point coordinate
+        if (endX > startX) {
+            //Round to the nearest multiple of base block(default: 8)
+            newValue = rounding(endX + DEFAULT_ROUNDING / 2);
+            if (newValue - startX < baseBlock) return;
+        }else{
+            //Round to the nearest multiple of base block(default: 8)
+            newValue = rounding(endX + (DEFAULT_ROUNDING/2)*3);
+            if (startX - newValue  < baseBlock) return;
+        }
+
         changes.firePropertyChange("endX", this.endX, newValue);
         this.endX = newValue;
     }
@@ -58,11 +69,35 @@ public class Selector {
     }
 
     public void setEndY(int endY) {
-        int newValue = rounding(endY+DEFAULT_ROUNDING/2);
-        System.out.println(newValue - startY < baseBlock);
-        if (newValue - startY < baseBlock) return;
+        int newValue;
+
+        //Identifies the Lowest Point coordinate
+        if (endY > startY) {
+            newValue = rounding(endY + DEFAULT_ROUNDING/2);
+            if (newValue - startY < baseBlock) return;
+        }else{
+            //Round to the nearest multiple of base block(default: 8)
+            newValue = rounding(endY + (DEFAULT_ROUNDING/2)*3);
+            if (startY - newValue  < baseBlock) return;
+        }
         changes.firePropertyChange("endY", this.endY, newValue);
         this.endY = newValue;
+    }
+
+    public Point getLowestPoint(){
+        int lowestX = (endX>startX) ? startX : endX;
+        int lowestY = (endY>startY) ? startY : endY;
+        return new Point(lowestX, lowestY);
+    }
+
+    public Point getDimensions(){
+        int width = (endX>startX) ? endX-startX : startX - endX;
+        int height = (endY>startY) ? endY-startY : startY - endY;
+        return new Point(width, height);
+    }
+
+    public void getInitialY(){
+
     }
 
     public void addPropertyChangeListener(PropertyChangeListener l) {
