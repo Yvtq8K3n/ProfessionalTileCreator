@@ -16,7 +16,7 @@ public class TileRepresentation extends JPanel implements PropertyChangeListener
     private Operator[] operadores;
     private Operator operatorAtual;
 
-    public TileRepresentation(){
+    TileRepresentation(){
         setBackground(Color.lightGray);
         setPreferredSize(new Dimension(385, 576));
         TilesetController.INSTANCE.setTileRepresentation(this);
@@ -47,6 +47,11 @@ public class TileRepresentation extends JPanel implements PropertyChangeListener
                        selector.getDimensions().getX(), selector.getDimensions().getY());
             }
         }
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        repaint();
     }
 
     @Override
@@ -87,10 +92,5 @@ public class TileRepresentation extends JPanel implements PropertyChangeListener
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
         operatorAtual.mouseWheelMoved(e);
-    }
-
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        repaint();
     }
 }

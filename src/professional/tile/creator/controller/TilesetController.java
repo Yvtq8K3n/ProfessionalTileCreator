@@ -33,8 +33,13 @@ public enum TilesetController {
 
     public void createSelector(int x, int y) throws OutOfBoundsException {
         selector = new Selector(x, y);
+
+        //Forcing redraw on tileRepresentation every time selector changes
         selector.addPropertyChangeListener(tileRepresentation);
+
+        //Force selector to readjust every time tileset is scaled
         tileset.addPropertyChangeListener(selector);
+
         tileRepresentation.repaint();
     }
 

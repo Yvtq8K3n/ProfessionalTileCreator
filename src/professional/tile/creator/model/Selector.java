@@ -69,13 +69,13 @@ public class Selector implements PropertyChangeListener{
         //Identify the Lowest X coordinate in order to use it as point of reference
         if (endX > startX) {
             //Force selection to only have DEFAULT_ROUNDING blocks
-            newValue = rounding(endX + (DEFAULT_ROUNDING*scale) / 2);
+            newValue = rounding(endX - 2 + (DEFAULT_ROUNDING*scale) / 2);
             if (newValue - startX < baseBlockScaled
                     || newValue > tileset.getWidth())
                 throw new OutOfBoundsException(this.getClass().getSimpleName());
         }else{
             //Force selection to only have DEFAULT_ROUNDING blocks
-            newValue = rounding(endX + (DEFAULT_ROUNDING*scale/2)*3);
+            newValue = rounding(endX + (DEFAULT_ROUNDING*scale/2));
             if (startX - newValue  < baseBlockScaled || newValue < 0)
                 throw new OutOfBoundsException(this.getClass().getSimpleName());
         }
@@ -91,14 +91,14 @@ public class Selector implements PropertyChangeListener{
         int newValue;
         //Identify the Lowest Y coordinate in order to use it as point of reference
         if (endY > startY) {
-            ///Force selection to only have DEFAULT_ROUNDING blocks
+            ///Selection is made of DEFAULT_ROUNDING Blocks every time DEFAULT_ROUNDING/2 is reached
             newValue = rounding(endY + DEFAULT_ROUNDING*scale/2);
             if (newValue - startY < baseBlockScaled
                     || newValue > tileset.getHeight())
                 throw new OutOfBoundsException(this.getClass().getSimpleName());
         }else{
-            //Force selection to only have DEFAULT_ROUNDING blocks
-            newValue = rounding(endY + (DEFAULT_ROUNDING*scale/2)*3);
+            //Force selector to only have DEFAULT_ROUNDING blocks
+            newValue = rounding(endY + (DEFAULT_ROUNDING*scale/2));
             if (startY - newValue  < baseBlockScaled || newValue < 0)
                 throw new OutOfBoundsException(this.getClass().getSimpleName());
         }
@@ -127,6 +127,8 @@ public class Selector implements PropertyChangeListener{
         Tileset tileset = getTileset();
         BufferedImage scaledImage = getTileset().getScaledImage();
         int scale = getTileset().getScaleFactor();
+
+        //Converts coordinates based OriginalImage e ScaledImage
         baseBlockScaled = baseBlock * scale;
         startX = startX * tileset.getWidth() / scaledImage.getWidth() * scale;
         startY = startY * tileset.getHeight() / scaledImage.getHeight() * scale;
@@ -135,7 +137,7 @@ public class Selector implements PropertyChangeListener{
     }
 
     private int rounding(int value){
-        return baseBlockScaled * Math.round(value/ baseBlockScaled);
+        return baseBlockScaled * Math.floorDiv(value,baseBlockScaled);
     }
 
     private Tileset getTileset(){
