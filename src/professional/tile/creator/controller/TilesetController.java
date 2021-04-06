@@ -5,36 +5,37 @@ import professional.tile.creator.Exceptions.OutOfBoundsException;
 import professional.tile.creator.model.Selector;
 import professional.tile.creator.model.Tileset;
 import professional.tile.creator.view.ApplicationView;
+import professional.tile.creator.view.TileRepresentation;
 
 import java.awt.image.BufferedImage;
 
-public enum ApplicationController {
+public enum TilesetController {
     INSTANCE;
 
     private Tileset tileset;
-    private ApplicationView applicationView;
     private Selector selector;
+    private TileRepresentation tileRepresentation;
 
     public void loadTileset(BufferedImage tileset){
         this.selector = null;
         this.tileset = new Tileset(tileset);
-        this.tileset.addPropertyChangeListener(applicationView);
-        applicationView.repaint();
+        this.tileset.addPropertyChangeListener(tileRepresentation);
+        tileRepresentation.repaint();
     }
 
     public Tileset getTileset() {
         return tileset;
     }
 
-    public void setApplicationView(ApplicationView applicationView){
-        this.applicationView = applicationView;
+    public void setTileRepresentation(TileRepresentation tileRepresentation){
+        this.tileRepresentation = tileRepresentation;
     }
 
     public void createSelector(int x, int y) throws OutOfBoundsException {
         selector = new Selector(x, y);
-        selector.addPropertyChangeListener(applicationView);
+        selector.addPropertyChangeListener(tileRepresentation);
         tileset.addPropertyChangeListener(selector);
-        applicationView.repaint();
+        tileRepresentation.repaint();
     }
 
     public Selector getSelector() {

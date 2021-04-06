@@ -15,13 +15,13 @@ public class OperatorSelector extends Operator {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        Tileset tileset = ApplicationController.INSTANCE.getTileset();
+        Tileset tileset = TilesetController.INSTANCE.getTileset();
         if (tileset !=null){
-            Selector selector = ApplicationController.INSTANCE.getSelector();
+            Selector selector = TilesetController.INSTANCE.getSelector();
             if (selector == null || selector.state == selector.state.FINISH) { // deveria ser com estados
                 System.out.println("Selector: CREATED");
                 try {
-                    ApplicationController.INSTANCE.createSelector(e.getX(), e.getY());
+                    TilesetController.INSTANCE.createSelector(e.getX(), e.getY());
                 } catch (OutOfBoundsException ex) {
                     System.out.println(ex.getMessage());
                 }
@@ -37,7 +37,7 @@ public class OperatorSelector extends Operator {
     @Override
     public void mouseDragged(MouseEvent e) {
         super.mouseMoved(e);
-        Selector selector = ApplicationController.INSTANCE.getSelector();
+        Selector selector = TilesetController.INSTANCE.getSelector();
         if (selector != null) { // deveria ser com estados
             if (selector.state == Selector.State.CREATED
                     || selector.state == Selector.State.RESIZING){
@@ -60,7 +60,7 @@ public class OperatorSelector extends Operator {
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        Selector selector = ApplicationController.INSTANCE.getSelector();
+        Selector selector = TilesetController.INSTANCE.getSelector();
         if (selector != null) {
             System.out.println("Selector: FINISHED");
             selector.state = Selector.State.FINISH;
@@ -72,9 +72,9 @@ public class OperatorSelector extends Operator {
         System.out.println("Scrolled");
         int notches = e.getWheelRotation();
         if (notches < 0) {
-            ApplicationController.INSTANCE.increaseScaleFactor();
+            TilesetController.INSTANCE.increaseScaleFactor();
         } else {
-            ApplicationController.INSTANCE.reduceScaleFactor();
+            TilesetController.INSTANCE.reduceScaleFactor();
         }
     }
 

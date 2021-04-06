@@ -2,21 +2,24 @@ package professional.tile.creator.view;
 
 import professional.tile.creator.controller.Operator;
 import professional.tile.creator.controller.OperatorSelector;
-import professional.tile.creator.controller.ApplicationController;
+import professional.tile.creator.controller.TilesetController;
 import professional.tile.creator.model.Selector;
 import professional.tile.creator.model.Tileset;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
-public class TileRepresentation extends JPanel implements MouseListener, MouseMotionListener, MouseWheelListener {
+public class TileRepresentation extends JPanel implements PropertyChangeListener, MouseListener, MouseMotionListener, MouseWheelListener {
     private Operator[] operadores;
     private Operator operatorAtual;
 
     public TileRepresentation(){
         setBackground(Color.lightGray);
         setPreferredSize(new Dimension(385, 576));
+        TilesetController.INSTANCE.setTileRepresentation(this);
 
         //Add event listeners
         addMouseListener(this);
@@ -33,11 +36,11 @@ public class TileRepresentation extends JPanel implements MouseListener, MouseMo
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        Tileset tileset = ApplicationController.INSTANCE.getTileset();
+        Tileset tileset = TilesetController.INSTANCE.getTileset();
         if (tileset!=null && tileset.hasImage()){
             g.drawImage(tileset.getScaledImage(), 0, 0, this);
 
-            Selector selector = ApplicationController.INSTANCE.getSelector();
+            Selector selector = TilesetController.INSTANCE.getSelector();
             if (selector!=null){
                 g.setColor(Color.red);
                g.drawRect(selector.getLowestPoint().getX(), selector.getLowestPoint().getY(),
@@ -86,4 +89,8 @@ public class TileRepresentation extends JPanel implements MouseListener, MouseMo
         operatorAtual.mouseWheelMoved(e);
     }
 
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        repaint();
+    }
 }

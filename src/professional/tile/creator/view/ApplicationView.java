@@ -1,19 +1,18 @@
 package professional.tile.creator.view;
 
-import professional.tile.creator.controller.ApplicationController;
+import professional.tile.creator.controller.TilesetController;
 
 import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-public class ApplicationView extends JFrame implements PropertyChangeListener {
+public class ApplicationView extends JFrame {
     PanelTileset panelTileset;
     PanelPallet panelPallet;
 
     public ApplicationView() {
         initComponents();
-        ApplicationController.INSTANCE.setApplicationView(this);
         try {
             //Attempting to get System Look and Feel
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -38,10 +37,5 @@ public class ApplicationView extends JFrame implements PropertyChangeListener {
         mainJPanel.add(panelTileset, BorderLayout.CENTER);
         mainJPanel.add(panelPallet, BorderLayout.LINE_END);
         add(mainJPanel);
-    }
-
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        repaint();
     }
 }

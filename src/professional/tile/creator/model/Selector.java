@@ -1,8 +1,7 @@
 package professional.tile.creator.model;
 
-import javafx.scene.layout.TilePane;
 import professional.tile.creator.Exceptions.OutOfBoundsException;
-import professional.tile.creator.controller.ApplicationController;
+import professional.tile.creator.controller.TilesetController;
 
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
@@ -140,7 +139,7 @@ public class Selector implements PropertyChangeListener{
     }
 
     private Tileset getTileset(){
-        return ApplicationController.INSTANCE.getTileset();
+        return TilesetController.INSTANCE.getTileset();
     }
 
     public void addPropertyChangeListener(PropertyChangeListener l) {

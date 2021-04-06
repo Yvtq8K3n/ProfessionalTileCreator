@@ -1,6 +1,6 @@
 package professional.tile.creator.view;
 
-import professional.tile.creator.controller.ApplicationController;
+import professional.tile.creator.controller.TilesetController;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -33,7 +33,7 @@ public class TilesetMenu extends JPanel {
                 try {
                     File uploadedFile = chooser.getSelectedFile();
                     BufferedImage image = ImageIO.read(uploadedFile);
-                    ApplicationController.INSTANCE.loadTileset(image);
+                    TilesetController.INSTANCE.loadTileset(image);
 
                 }catch (Exception ex){
                     JOptionPane.showMessageDialog(null, ex.getMessage());
