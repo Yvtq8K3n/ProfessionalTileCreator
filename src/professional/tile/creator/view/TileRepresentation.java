@@ -9,6 +9,7 @@ import professional.tile.creator.model.Tileset;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -18,7 +19,7 @@ public class TileRepresentation extends JPanel implements PropertyChangeListener
 
     TileRepresentation(){
         setBackground(Color.lightGray);
-        setPreferredSize(new Dimension(385, 576));
+        setPreferredSize(new Dimension(416, 576));
         TilesetController.INSTANCE.setTileRepresentation(this);
 
         //Add event listeners
@@ -51,7 +52,12 @@ public class TileRepresentation extends JPanel implements PropertyChangeListener
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
+        if (evt.getPropertyName().equals("tilesetScaled")){
+            BufferedImage bufferedImage = (BufferedImage) evt.getNewValue();
+            setPreferredSize(new Dimension(bufferedImage.getWidth(), bufferedImage.getHeight()));
+        }
         repaint();
+        getParent().revalidate();
     }
 
     @Override

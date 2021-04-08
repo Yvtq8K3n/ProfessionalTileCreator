@@ -9,7 +9,6 @@ import java.awt.image.BufferedImage;
 
 public class PanelTileset extends JPanel {
 
-
     TilesetMenu tilesetMenu;
     TileRepresentation tileRepresentation;
 
