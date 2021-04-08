@@ -19,7 +19,7 @@ public class TileRepresentation extends JPanel implements PropertyChangeListener
 
     TileRepresentation(){
         setBackground(Color.lightGray);
-        setPreferredSize(new Dimension(416, 576));
+        setPreferredSize(new Dimension(384, 576));
         TilesetController.INSTANCE.setTileRepresentation(this);
 
         //Add event listeners

@@ -10,6 +10,8 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 
 public class ColorsRepresentation extends JPanel implements PropertyChangeListener {
+    JScrollPane scrollPanel;
+
     ArrayList<ColorButton> btnRectangles;
 
     public ColorsRepresentation() {
@@ -31,16 +33,23 @@ public class ColorsRepresentation extends JPanel implements PropertyChangeListen
             btnRectangles.add(btnRectangle);
             add(btnRectangle);
         }
-        revalidate();
+
+        //Resize Panel to accommodate the new buttons
+        int btnRows = (btnRectangles.size() / 8) + 1;
+        setPreferredSize(new Dimension(getWidth(), btnRows * ColorButton.DIMENSION));
         repaint();
+        getParent().revalidate();
     }
 
     private void updateTilesetColors() {
-        System.out.println("NOT YET SUPPORTED");
+
     }
 
     @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        updateTilesetColors();
+    public void propertyChange(PropertyChangeEvent evt){
+    }
+
+    public void addScrollPanel(JScrollPane scrollPanel) {
+            this.scrollPanel = scrollPanel;
     }
 }

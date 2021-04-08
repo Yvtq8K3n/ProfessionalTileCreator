@@ -5,8 +5,10 @@ import java.awt.*;
 
 public class ColorButton extends AbstractButton {
 
+    public final static int DIMENSION = 25;
+
     public ColorButton() {
-        setPreferredSize(new Dimension(25, 25));
+        setPreferredSize(new Dimension(DIMENSION, DIMENSION));
         setOpaque(true);
     }
 
