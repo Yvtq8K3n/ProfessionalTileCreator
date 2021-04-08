@@ -63,7 +63,7 @@ public class Selector implements PropertyChangeListener{
 
     public void setEndX(int endX) throws OutOfBoundsException {
         int scale = getTileset().getScaleFactor();
-        BufferedImage tileset = getTileset().getScaledImage();
+        BufferedImage scaledTileset = getTileset().getScaledImage();
 
         int newValue;
         //Identify the Lowest X coordinate in order to use it as point of reference
@@ -71,7 +71,7 @@ public class Selector implements PropertyChangeListener{
             //Force selection to only have DEFAULT_ROUNDING blocks
             newValue = rounding(endX - 2 + (DEFAULT_ROUNDING*scale) / 2);
             if (newValue - startX < baseBlockScaled
-                    || newValue > tileset.getWidth())
+                    || newValue > scaledTileset.getWidth())
                 throw new OutOfBoundsException(this.getClass().getSimpleName());
         }else{
             //Force selection to only have DEFAULT_ROUNDING blocks
@@ -86,7 +86,7 @@ public class Selector implements PropertyChangeListener{
 
     public void setEndY(int endY) throws OutOfBoundsException {
         int scale = getTileset().getScaleFactor();
-        BufferedImage tileset = getTileset().getScaledImage();
+        BufferedImage scaledTileset = getTileset().getScaledImage();
 
         int newValue;
         //Identify the Lowest Y coordinate in order to use it as point of reference
@@ -94,7 +94,7 @@ public class Selector implements PropertyChangeListener{
             ///Selection is made of DEFAULT_ROUNDING Blocks every time DEFAULT_ROUNDING/2 is reached
             newValue = rounding(endY + DEFAULT_ROUNDING*scale/2);
             if (newValue - startY < baseBlockScaled
-                    || newValue > tileset.getHeight())
+                    || newValue > scaledTileset.getHeight())
                 throw new OutOfBoundsException(this.getClass().getSimpleName());
         }else{
             //Force selector to only have DEFAULT_ROUNDING blocks
@@ -124,16 +124,18 @@ public class Selector implements PropertyChangeListener{
      */
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        Tileset tileset = getTileset();
-        BufferedImage scaledImage = getTileset().getScaledImage();
-        int scale = getTileset().getScaleFactor();
+        if (evt.getPropertyName().equals("scaleChanged")){
+            Tileset tileset = getTileset();
+            BufferedImage scaledImage = getTileset().getScaledImage();
+            int scale = getTileset().getScaleFactor();
 
-        //Converts coordinates based OriginalImage e ScaledImage
-        baseBlockScaled = baseBlock * scale;
-        startX = startX * tileset.getWidth() / scaledImage.getWidth() * scale;
-        startY = startY * tileset.getHeight() / scaledImage.getHeight() * scale;
-        endX = endX * tileset.getWidth() / scaledImage.getWidth() * scale;
-        endY = endY * tileset.getHeight() / scaledImage.getHeight() * scale;
+            //Converts coordinates based OriginalImage e ScaledImage
+            baseBlockScaled = baseBlock * scale;
+            startX = startX * tileset.getWidth() / scaledImage.getWidth() * scale;
+            startY = startY * tileset.getHeight() / scaledImage.getHeight() * scale;
+            endX = endX * tileset.getWidth() / scaledImage.getWidth() * scale;
+            endY = endY * tileset.getHeight() / scaledImage.getHeight() * scale;
+        }
     }
 
     private int rounding(int value){
