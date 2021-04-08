@@ -80,7 +80,7 @@ public class Selector implements PropertyChangeListener{
                 throw new OutOfBoundsException(this.getClass().getSimpleName());
         }
 
-        changes.firePropertyChange("endX", this.endX, newValue);
+        changes.firePropertyChange("selectorResized", this.endX, newValue);
         this.endX = newValue;
     }
 
@@ -102,7 +102,7 @@ public class Selector implements PropertyChangeListener{
             if (startY - newValue  < baseBlockScaled || newValue < 0)
                 throw new OutOfBoundsException(this.getClass().getSimpleName());
         }
-        changes.firePropertyChange("endY", this.endY, newValue);
+        changes.firePropertyChange("selectorResized", this.endY, newValue);
         this.endY = newValue;
     }
 
