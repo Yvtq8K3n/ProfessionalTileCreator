@@ -8,6 +8,10 @@ import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS;
 
 public class PanelPallet extends JPanel {
 
+    JPanel jPanelMenuDisplayColors;
+    JButton btnDisplayColorsHue;
+    JButton btnDisplayColorsStep;
+    JButton btnDisplayColorsInverseStep;
     JPanel jPanelColors;
     JLabel lbTilesetColors;
     ColorsRepresentation colorsRepresentation;
@@ -17,9 +21,28 @@ public class PanelPallet extends JPanel {
     }
 
     public void initComponents(){
-        //jPanelColors
+        //jPanelMenuDisplayColors
         lbTilesetColors = new JLabel("Tileset Colors:");
-        lbTilesetColors.setPreferredSize(new Dimension(200, 40));
+        btnDisplayColorsHue = new JButton(new ImageIcon("./resources/hueIcon.png"));
+        btnDisplayColorsHue.setToolTipText("Display based on HUE");
+        btnDisplayColorsHue.setPreferredSize(new Dimension(26, 26));
+        btnDisplayColorsHue.setBorderPainted(false);
+        btnDisplayColorsStep = new JButton(new ImageIcon("./resources/stepIcon.png"));
+        btnDisplayColorsStep.setToolTipText("Display based on Step");
+        btnDisplayColorsStep.setPreferredSize(new Dimension(26, 26));
+        btnDisplayColorsStep.setBorderPainted(false);
+        btnDisplayColorsInverseStep = new JButton(new ImageIcon("./resources/inverseStepIcon.png"));
+        btnDisplayColorsInverseStep.setToolTipText("Display based on InverseStep");
+        btnDisplayColorsInverseStep.setPreferredSize(new Dimension(26, 26));
+        btnDisplayColorsInverseStep.setBorderPainted(false);
+
+        jPanelMenuDisplayColors = new JPanel();
+        jPanelMenuDisplayColors.setPreferredSize(new Dimension(200, 40));
+        jPanelMenuDisplayColors.add(lbTilesetColors);
+        jPanelMenuDisplayColors.add(btnDisplayColorsHue);
+        jPanelMenuDisplayColors.add(btnDisplayColorsStep);
+        jPanelMenuDisplayColors.add(btnDisplayColorsInverseStep);
+
         colorsRepresentation = new ColorsRepresentation();
         JScrollPane scrollPanel = new JScrollPane(colorsRepresentation);
         colorsRepresentation.addScrollPanel(scrollPanel);
@@ -28,7 +51,7 @@ public class PanelPallet extends JPanel {
 
         jPanelColors = new JPanel();
         jPanelColors.setLayout(new BorderLayout());
-        jPanelColors.add(lbTilesetColors, BorderLayout.PAGE_START);
+        jPanelColors.add(jPanelMenuDisplayColors, BorderLayout.PAGE_START);
         jPanelColors.add(scrollPanel, BorderLayout.CENTER);
 
         JPanel panel2 = new JPanel();
@@ -37,8 +60,8 @@ public class PanelPallet extends JPanel {
 
         //PanelPallet
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        add(jPanelColors);
         add(panel2);
+        add(jPanelColors);
     }
 
 }

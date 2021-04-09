@@ -1,13 +1,14 @@
 package professional.tile.creator.view;
 
+
 import professional.tile.creator.controller.TilesetController;
-import professional.tile.creator.model.Tileset;
+import professional.tile.creator.model.TilesetColorManager;
 
 import javax.swing.*;
-import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.awt.*;
 
 public class ColorsRepresentation extends JPanel implements PropertyChangeListener {
     JScrollPane scrollPanel;
@@ -24,8 +25,8 @@ public class ColorsRepresentation extends JPanel implements PropertyChangeListen
     public void drawTilesetColors(){
         removeAll();
         btnRectangles = new ArrayList<>();
-        Tileset tileset = TilesetController.INSTANCE.getTileset();
-        Color colors[] = tileset.getColors();
+        TilesetColorManager colorManager = TilesetController.INSTANCE.getTilesetColorManager();
+        Color[] colors = colorManager.getColorsSortByStepSorting();
         for (int i = 0; i<colors.length; i++){
             System.out.println("Button created");
             ColorButton btnRectangle = new ColorButton();

@@ -7,19 +7,17 @@ import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.ArrayList;
 
 public class Tileset{
     private BufferedImage image;
     private BufferedImage scaledImage;
-    private Color[] colors;
+
     private int scale = 1;
     private PropertyChangeSupport changes = new PropertyChangeSupport(this);
 
     public Tileset(BufferedImage image) {
         this.image = image;
         this.scaledImage = generateScaledImage();
-        this.colors = extractTilesetColors();
     }
 
     public BufferedImage getImage() {
@@ -29,9 +27,6 @@ public class Tileset{
     public void setImage(BufferedImage image) {
         this.image = image;
     }
-
-
-
 
     private BufferedImage generateScaledImage() {
         int w = image.getWidth();
@@ -70,25 +65,6 @@ public class Tileset{
         generateNewScaledImage();
     }
 
-
-    //Performance can be increased with intelligent search
-    // start at middle
-    // < if color lowered goes back
-    // > if color is higher goes front
-    // Need to be organized in some kind of visualization patterns
-    private Color[] extractTilesetColors(){
-        ArrayList<Color> colors =  new ArrayList<>();
-
-        for (int x = 0; x < image.getWidth(); x++) {
-            for (int y = 0; y < image.getHeight(); y++) {
-                Color newColor = new Color(image.getRGB(x, y));
-                if (!colors.contains(newColor)) colors.add(newColor);
-            }
-        }
-
-        return colors.toArray(new Color[colors.size()]);
-    }
-
     public BufferedImage getScaledImage() {
         return scaledImage;
     }
@@ -119,13 +95,5 @@ public class Tileset{
 
     public void removePropertyChangeListener(PropertyChangeListener l) {
         changes.removePropertyChangeListener(l);
-    }
-
-    public Color[] getColors() {
-        return colors;
-    }
-
-    public void setColors(Color[] colors) {
-        this.colors = colors;
     }
 }
