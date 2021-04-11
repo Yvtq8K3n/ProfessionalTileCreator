@@ -1,47 +1,30 @@
 package professional.tile.creator.model;
 
-import professional.tile.creator.model.comparison.CompareColorsByStepInvertSorting;
-import professional.tile.creator.model.comparison.CompareColorsByStepSorting;
-import professional.tile.creator.model.comparison.CompareColorsByHue;
-import professional.tile.creator.model.comparison.CompareColorsByLuminosity;
+import professional.tile.creator.model.comparison.*;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class TilesetColorManager {
+public class TilesetColorManager{
     private Tileset tileset;
     private Color[] colors;
-    private Color[] colorsSortedByHUE;
-    private Color[] colorsSortedByLuminosity;
-    private Color[] colorsSortByStepSorting;
-    private Color[] colorsSortByStepInvertSorting;
+
+    private Color[] sortedColors;
+    private ColorComparator sortComparator;
+    private PropertyChangeSupport changes = new PropertyChangeSupport(this);
 
     public TilesetColorManager(Tileset tileset) {
         this.tileset = tileset;
         this.colors = extractTilesetColors();
-
-        List<Color> colorsSortedByHUE = Arrays.asList(colors);
-        Collections.sort(colorsSortedByHUE, CompareColorsByHue.CRITERIA);
-        this.colorsSortedByHUE = colorsSortedByHUE.toArray(new Color[colorsSortedByHUE.size()]);
-
-        List<Color> colorsSortedByLuminosity = Arrays.asList(colors);
-        Collections.sort(colorsSortedByLuminosity, CompareColorsByLuminosity.CRITERIA);
-        this.colorsSortedByLuminosity = colorsSortedByLuminosity.toArray(new Color[colorsSortedByLuminosity.size()]);
-
-        List<Color> colorsSortByStepSoring = Arrays.asList(colors);
-        Collections.sort(colorsSortByStepSoring, CompareColorsByStepSorting.CRITERIA);
-        this.colorsSortByStepSorting = colorsSortByStepSoring.toArray(new Color[colorsSortByStepSoring.size()]);
-
-        List<Color> colorsSortByStepInvertSorting = Arrays.asList(colors);
-        Collections.sort(colorsSortByStepInvertSorting, CompareColorsByStepInvertSorting.CRITERIA);
-        this.colorsSortByStepInvertSorting = colorsSortByStepInvertSorting.toArray(new Color[colorsSortByStepInvertSorting.size()]);
-
-
+        setSortComparator(CompareColorsByStepInvertSorting.CRITERIA);
     }
+
 
     //Performance can be increased with intelligent search
     // start at middle
@@ -66,20 +49,25 @@ public class TilesetColorManager {
         return colors;
     }
 
-    public Color[] getColorsSortedByHUE() {
-        return colorsSortedByHUE;
+
+    public Color[] getSortedColors() {
+        return sortedColors;
     }
 
-    public Color[] getColorsSortedByLuminosity() {
-        return colorsSortedByLuminosity;
+    public void setSortComparator(ColorComparator sortComparator) {
+        this.sortComparator = sortComparator;
+        List<Color> newSortedColors = Arrays.asList(colors);
+        Collections.sort(newSortedColors, sortComparator);
+        this.sortedColors = newSortedColors.toArray(new Color[newSortedColors.size()]);
+        changes.firePropertyChange("sortedColors",  null, newSortedColors);
     }
 
-    public Color[] getColorsSortByStepSorting() {
-        return colorsSortByStepSorting;
+    public void addPropertyChangeListener(PropertyChangeListener l) {
+        changes.addPropertyChangeListener(l);
     }
 
-    public Color[] getColorsSortByStepInvertSorting() {
-        return colorsSortByStepInvertSorting;
+    public void removePropertyChangeListener(PropertyChangeListener l) {
+        changes.removePropertyChangeListener(l);
     }
 
 }

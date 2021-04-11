@@ -1,17 +1,23 @@
 package professional.tile.creator.view;
 
+import org.openide.awt.DropDownButtonFactory;
+import professional.tile.creator.controller.TilesetController;
+
 import javax.swing.*;
 import java.awt.*;
+
 
 import static javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER;
 import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS;
 
 public class PanelPallet extends JPanel {
 
-    JPanel jPanelMenuDisplayColors;
-    JButton btnDisplayColorsHue;
-    JButton btnDisplayColorsStep;
-    JButton btnDisplayColorsInverseStep;
+    JTabbedPane tabbedPane;
+    ReplaceColorsMenu replaceColorsMenu;
+
+    JPanel jPanelSortDisplayColors;
+    JButton btnSortColors;
+
     JPanel jPanelColors;
     JLabel lbTilesetColors;
     ColorsRepresentation colorsRepresentation;
@@ -21,27 +27,26 @@ public class PanelPallet extends JPanel {
     }
 
     public void initComponents(){
-        //jPanelMenuDisplayColors
-        lbTilesetColors = new JLabel("Tileset Colors:");
-        btnDisplayColorsHue = new JButton(new ImageIcon("./resources/hueIcon.png"));
-        btnDisplayColorsHue.setToolTipText("Display based on HUE");
-        btnDisplayColorsHue.setPreferredSize(new Dimension(26, 26));
-        btnDisplayColorsHue.setBorderPainted(false);
-        btnDisplayColorsStep = new JButton(new ImageIcon("./resources/stepIcon.png"));
-        btnDisplayColorsStep.setToolTipText("Display based on Step");
-        btnDisplayColorsStep.setPreferredSize(new Dimension(26, 26));
-        btnDisplayColorsStep.setBorderPainted(false);
-        btnDisplayColorsInverseStep = new JButton(new ImageIcon("./resources/inverseStepIcon.png"));
-        btnDisplayColorsInverseStep.setToolTipText("Display based on InverseStep");
-        btnDisplayColorsInverseStep.setPreferredSize(new Dimension(26, 26));
-        btnDisplayColorsInverseStep.setBorderPainted(false);
+        //tabbedPane
+        replaceColorsMenu = new ReplaceColorsMenu();
 
-        jPanelMenuDisplayColors = new JPanel();
-        jPanelMenuDisplayColors.setPreferredSize(new Dimension(200, 40));
-        jPanelMenuDisplayColors.add(lbTilesetColors);
-        jPanelMenuDisplayColors.add(btnDisplayColorsHue);
-        jPanelMenuDisplayColors.add(btnDisplayColorsStep);
-        jPanelMenuDisplayColors.add(btnDisplayColorsInverseStep);
+        tabbedPane = new JTabbedPane();
+        tabbedPane.setPreferredSize(new Dimension(175, 280));
+        tabbedPane.addTab("Replace", replaceColorsMenu);
+        tabbedPane.addTab("Inspector", new JPanel());
+        tabbedPane.addTab("Misc", new JPanel());
+
+        //jPanelSortDisplayColors
+        lbTilesetColors = new JLabel("Tileset Colors:");
+        btnSortColors = createbtnDropDown(new ImageIcon("./resources/hueIcon.png"));
+        btnSortColors.setPreferredSize(new Dimension(40, 20));
+        btnSortColors.setFocusable(false);
+
+        jPanelSortDisplayColors = new JPanel();
+        jPanelSortDisplayColors.setLayout(new BorderLayout());
+        jPanelSortDisplayColors.setPreferredSize(new Dimension(200, 30));
+        jPanelSortDisplayColors.add(lbTilesetColors,BorderLayout.LINE_START);
+        jPanelSortDisplayColors.add(btnSortColors,BorderLayout.LINE_END);
 
         colorsRepresentation = new ColorsRepresentation();
         JScrollPane scrollPanel = new JScrollPane(colorsRepresentation);
@@ -51,17 +56,40 @@ public class PanelPallet extends JPanel {
 
         jPanelColors = new JPanel();
         jPanelColors.setLayout(new BorderLayout());
-        jPanelColors.add(jPanelMenuDisplayColors, BorderLayout.PAGE_START);
+        jPanelColors.add(jPanelSortDisplayColors, BorderLayout.PAGE_START);
         jPanelColors.add(scrollPanel, BorderLayout.CENTER);
 
-        JPanel panel2 = new JPanel();
-        panel2.setBackground(Color.red);
-        panel2.setPreferredSize(new Dimension(175, 300));
 
         //PanelPallet
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        add(panel2);
+        add(tabbedPane);
         add(jPanelColors);
+    }
+
+    public JButton createbtnDropDown(ImageIcon icon){
+        JPopupMenu popupMenu = new JPopupMenu();
+
+        JMenuItem menuItemColorsbyInvertStep = new JMenuItem("Sort: Colors By InvertStep");
+        menuItemColorsbyInvertStep.addActionListener(e -> TilesetController.INSTANCE.setColorsSort("InverseStep"));
+        popupMenu.add(menuItemColorsbyInvertStep);
+
+        JMenuItem menuItemColorsByLuminosity = new JMenuItem("Sort: Colors By Luminosity");
+        menuItemColorsByLuminosity.addActionListener(e -> TilesetController.INSTANCE.setColorsSort("Luminosity"));
+        popupMenu.add(menuItemColorsByLuminosity);
+
+        JMenuItem menuItemColorsByHue = new JMenuItem("Sort: Colors By Hue");
+        menuItemColorsByHue.addActionListener(e -> TilesetController.INSTANCE.setColorsSort("Hue"));
+        popupMenu.add(menuItemColorsByHue);
+
+        JMenuItem menuItemColorsByStep = new JMenuItem("Sort: Colors By Step");
+        menuItemColorsByStep.addActionListener(e -> TilesetController.INSTANCE.setColorsSort("Step"));
+        popupMenu.add(menuItemColorsByStep);
+
+        JMenuItem menuItemColorsbyRGBStep = new JMenuItem("Sort: Colors By RGBStep");
+        menuItemColorsbyRGBStep.addActionListener(e -> TilesetController.INSTANCE.setColorsSort("RGBStep"));
+        popupMenu.add(menuItemColorsbyRGBStep);
+
+        return DropDownButtonFactory.createDropDownButton(icon, popupMenu);
     }
 
 }

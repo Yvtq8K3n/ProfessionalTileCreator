@@ -8,6 +8,7 @@ public class ColorButton extends AbstractButton {
     public final static int DIMENSION = 25;
 
     public ColorButton() {
+        super();
         setPreferredSize(new Dimension(DIMENSION, DIMENSION));
         setOpaque(true);
     }

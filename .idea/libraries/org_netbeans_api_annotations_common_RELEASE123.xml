@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="org-netbeans-api-annotations-common-RELEASE123">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/modules/org-netbeans-api-annotations-common-RELEASE123.jar!/" />
+      <root url="jar://$PROJECT_DIR$/modules/org-openide-awt-RELEASE123.jar!/" />
+      <root url="jar://$PROJECT_DIR$/modules/org-openide-filesystems-RELEASE123.jar!/" />
+      <root url="jar://$PROJECT_DIR$/modules/org-openide-util-lookup-RELEASE123.jar!/" />
+      <root url="jar://$PROJECT_DIR$/modules/org-openide-util-RELEASE123.jar!/" />
+      <root url="jar://$PROJECT_DIR$/modules/org-openide-util-ui-RELEASE123.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

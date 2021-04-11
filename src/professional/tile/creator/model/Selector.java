@@ -80,8 +80,9 @@ public class Selector implements PropertyChangeListener{
                 throw new OutOfBoundsException(this.getClass().getSimpleName());
         }
 
-        changes.firePropertyChange("selectorResized", this.endX, newValue);
         this.endX = newValue;
+        changes.firePropertyChange("selectorResized", null, endX);
+
     }
 
     public void setEndY(int endY) throws OutOfBoundsException {
@@ -102,8 +103,9 @@ public class Selector implements PropertyChangeListener{
             if (startY - newValue  < baseBlockScaled || newValue < 0)
                 throw new OutOfBoundsException(this.getClass().getSimpleName());
         }
-        changes.firePropertyChange("selectorResized", this.endY, newValue);
+
         this.endY = newValue;
+        changes.firePropertyChange("selectorResized",  null, this.endY);
     }
 
     public Point getLowestPoint(){

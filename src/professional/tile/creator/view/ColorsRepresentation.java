@@ -26,7 +26,7 @@ public class ColorsRepresentation extends JPanel implements PropertyChangeListen
         removeAll();
         btnRectangles = new ArrayList<>();
         TilesetColorManager colorManager = TilesetController.INSTANCE.getTilesetColorManager();
-        Color[] colors = colorManager.getColorsSortByStepSorting();
+        Color[] colors = colorManager.getSortedColors();
         for (int i = 0; i<colors.length; i++){
             System.out.println("Button created");
             ColorButton btnRectangle = new ColorButton();
@@ -42,12 +42,9 @@ public class ColorsRepresentation extends JPanel implements PropertyChangeListen
         getParent().revalidate();
     }
 
-    private void updateTilesetColors() {
-
-    }
-
     @Override
     public void propertyChange(PropertyChangeEvent evt){
+        if (evt.getPropertyName().equals("sortedColors")) drawTilesetColors();
     }
 
     public void addScrollPanel(JScrollPane scrollPanel) {
