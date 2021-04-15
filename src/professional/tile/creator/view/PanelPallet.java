@@ -50,7 +50,6 @@ public class PanelPallet extends JPanel {
 
         colorsRepresentation = new ColorsRepresentation();
         JScrollPane scrollPanel = new JScrollPane(colorsRepresentation);
-        colorsRepresentation.addScrollPanel(scrollPanel);
         scrollPanel.setVerticalScrollBarPolicy(VERTICAL_SCROLLBAR_ALWAYS);
         scrollPanel.setHorizontalScrollBarPolicy(HORIZONTAL_SCROLLBAR_NEVER);
 

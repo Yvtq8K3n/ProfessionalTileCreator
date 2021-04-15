@@ -1,15 +1,16 @@
 package professional.tile.creator.controller;
 
 import professional.tile.creator.Exceptions.OutOfBoundsException;
-import professional.tile.creator.model.Selector;
+import professional.tile.creator.model.selection.Selector;
+import professional.tile.creator.model.selection.SelectorTileset;
 import professional.tile.creator.model.Tileset;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 
-public class OperatorSelector extends Operator {
+public class OperatorTileSelector extends Operator {
 
-    public OperatorSelector(){
+    public OperatorTileSelector(){
 
     }
 
@@ -17,9 +18,9 @@ public class OperatorSelector extends Operator {
     public void mousePressed(MouseEvent e) {
         Tileset tileset = TilesetController.INSTANCE.getTileset();
         if (tileset !=null){
-            Selector selector = TilesetController.INSTANCE.getSelector();
-            if (selector == null || selector.state == selector.state.FINISH) { // deveria ser com estados
-                System.out.println("Selector: CREATED");
+            SelectorTileset selectorTileset = TilesetController.INSTANCE.getSelectorTileset();
+            if (selectorTileset == null || selectorTileset.getState() == Selector.State.FINISH) { // deveria ser com estados
+                System.out.println("SelectorTileset: CREATED");
                 try {
                     TilesetController.INSTANCE.createSelector(e.getX(), e.getY());
                 } catch (OutOfBoundsException ex) {
@@ -37,33 +38,33 @@ public class OperatorSelector extends Operator {
     @Override
     public void mouseDragged(MouseEvent e) {
         super.mouseMoved(e);
-        Selector selector = TilesetController.INSTANCE.getSelector();
-        if (selector != null) { // deveria ser com estados
-            if (selector.state == Selector.State.CREATED
-                    || selector.state == Selector.State.RESIZING){
+        SelectorTileset selectorTileset = TilesetController.INSTANCE.getSelectorTileset();
+        if (selectorTileset != null) { // deveria ser com estados
+            if (selectorTileset.getState() == Selector.State.CREATED
+                    || selectorTileset.getState() == Selector.State.RESIZING){
                 try {
-                    selector.setEndX(e.getX());
+                    selectorTileset.setEndX(e.getX());
                 } catch (OutOfBoundsException ex) {
                     System.out.println(ex.getMessage());
                 }
                 try {
-                    selector.setEndY(e.getY());
+                    selectorTileset.setEndY(e.getY());
                 } catch (OutOfBoundsException ex) {
                     System.out.println(ex.getMessage());
                 }
 
-                System.out.println("Selector: RESIZING");
-                selector.state = Selector.State.RESIZING;
+                System.out.println("SelectorTileset: RESIZING");
+                selectorTileset.setState(SelectorTileset.State.RESIZING);
             }
         }
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        Selector selector = TilesetController.INSTANCE.getSelector();
-        if (selector != null) {
-            System.out.println("Selector: FINISHED");
-            selector.state = Selector.State.FINISH;
+        SelectorTileset selectorTileset = TilesetController.INSTANCE.getSelectorTileset();
+        if (selectorTileset != null) {
+            System.out.println("SelectorTileset: FINISHED");
+            selectorTileset.setState(SelectorTileset.State.FINISH);
         }
     }
 

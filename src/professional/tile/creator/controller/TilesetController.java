@@ -3,7 +3,7 @@ package professional.tile.creator.controller;
 
 import professional.tile.creator.Exceptions.InvalidOperationException;
 import professional.tile.creator.Exceptions.OutOfBoundsException;
-import professional.tile.creator.model.Selector;
+import professional.tile.creator.model.selection.SelectorTileset;
 import professional.tile.creator.model.Tileset;
 import professional.tile.creator.model.TilesetColorManager;
 import professional.tile.creator.model.comparison.*;
@@ -17,7 +17,7 @@ public enum TilesetController {
 
     //Model
     private Tileset tileset;
-    private Selector selector;
+    private SelectorTileset selectorTileset;
     private TilesetColorManager tilesetColorManager;
 
     //View
@@ -25,7 +25,7 @@ public enum TilesetController {
     private ColorsRepresentation colorsRepresentation;
 
     public void loadTileset(BufferedImage tileset){
-        this.selector = null;
+        this.selectorTileset = null;
         this.tileset = new Tileset(tileset);
         this.tileset.addPropertyChangeListener(tileRepresentation);
         this.tileset.addPropertyChangeListener(colorsRepresentation);
@@ -50,19 +50,19 @@ public enum TilesetController {
 
 
     public void createSelector(int x, int y) throws OutOfBoundsException {
-        selector = new Selector(x, y);
+        selectorTileset = new SelectorTileset(tileset, x, y);
 
-        //Forcing redraw on tileRepresentation every time selector changes
-        selector.addPropertyChangeListener(tileRepresentation);
+        //Forcing redraw on tileRepresentation every time selectorTileset changes
+        selectorTileset.addPropertyChangeListener(tileRepresentation);
 
-        //Force selector to readjust every time tileset is scaled
-        tileset.addPropertyChangeListener(selector);
+        //Force selectorTileset to readjust every time tileset is scaled
+        tileset.addPropertyChangeListener(selectorTileset);
 
         tileRepresentation.repaint();
     }
 
-    public Selector getSelector() {
-        return selector;
+    public SelectorTileset getSelectorTileset() {
+        return selectorTileset;
     }
 
     public void reduceScaleFactor(){

@@ -1,9 +1,9 @@
 package professional.tile.creator.view;
 
 import professional.tile.creator.controller.Operator;
-import professional.tile.creator.controller.OperatorSelector;
+import professional.tile.creator.controller.OperatorTileSelector;
 import professional.tile.creator.controller.TilesetController;
-import professional.tile.creator.model.Selector;
+import professional.tile.creator.model.selection.SelectorTileset;
 import professional.tile.creator.model.Tileset;
 
 import javax.swing.*;
@@ -29,7 +29,7 @@ public class TileRepresentation extends JPanel implements PropertyChangeListener
 
         //Create operators
         operadores = new Operator[2];
-        operadores[0] = new OperatorSelector();
+        operadores[0] = new OperatorTileSelector();
         operatorAtual = operadores[0];
     }
 
@@ -41,11 +41,11 @@ public class TileRepresentation extends JPanel implements PropertyChangeListener
         if (tileset!=null && tileset.hasImage()){
             g.drawImage(tileset.getScaledImage(), 0, 0, this);
 
-            Selector selector = TilesetController.INSTANCE.getSelector();
-            if (selector!=null){
+            SelectorTileset selectorTileset = TilesetController.INSTANCE.getSelectorTileset();
+            if (selectorTileset !=null){
                 g.setColor(Color.red);
-               g.drawRect(selector.getLowestPoint().getX(), selector.getLowestPoint().getY(),
-                       selector.getDimensions().getX(), selector.getDimensions().getY());
+               g.drawRect(selectorTileset.getLowestPoint().getX(), selectorTileset.getLowestPoint().getY(),
+                       selectorTileset.getDimensions().getX(), selectorTileset.getDimensions().getY());
             }
         }
     }

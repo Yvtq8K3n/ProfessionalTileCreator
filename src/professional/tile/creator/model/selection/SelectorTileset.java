@@ -1,110 +1,101 @@
-package professional.tile.creator.model;
+package professional.tile.creator.model.selection;
 
 import professional.tile.creator.Exceptions.OutOfBoundsException;
 import professional.tile.creator.controller.TilesetController;
+import professional.tile.creator.model.Point;
+import professional.tile.creator.model.Tileset;
 
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
-public class Selector implements PropertyChangeListener{
-    private static final int DEFAULT_ROUNDING = 8;
-    private static final int BLOCK_SIZE_ROUNDING = 16;
+public class SelectorTileset implements Selector{
+    //Selector coordinates
+    protected Tileset tileset;
+    protected int startX, startY;
+    protected int endX, endY;
 
-    public enum State{
-        CREATED,
-        RESIZING,
-        FINISH
-    }
-
-    private int startX, startY;
-    private int endX, endY;
+    //Selector Block Size
     private int baseBlock;
     private int baseBlockScaled;
-    public State state;
-    private PropertyChangeSupport changes;
 
-    private Selector() {
-        changes = new PropertyChangeSupport(this);
-        baseBlock = DEFAULT_ROUNDING;
-        state = State.CREATED;
+    //Selector state
+    protected State state;
+    protected PropertyChangeSupport changes;
+
+    public SelectorTileset(Tileset tileset, int startX, int startY) throws OutOfBoundsException {
+        this.tileset = tileset;
+        this.baseBlock = DEFAULT_ROUNDING;
+        this.baseBlockScaled = baseBlock * tileset.getScaleFactor();
+        this.changes = new PropertyChangeSupport(this);
+        this.state = State.CREATED;
+
+        generateCoordinates(startX, startY);
+
     }
 
-    public Selector(int startX, int startY) throws OutOfBoundsException {
-        this();
-        Tileset tileset = getTileset();
+    private void generateCoordinates(int startX, int startY) throws OutOfBoundsException {
         int scale = tileset.getScaleFactor();
-        this.baseBlockScaled = baseBlock * scale;
+
+        //Rounding start coordinates based on baseBlockScaled
+        this.startX = rounding(baseBlockScaled, startX);
+        this.startY = rounding(baseBlockScaled, startY);
 
         //Making sure start point is created within the bounds of the tileset
-        this.startX = rounding(startX);
         if ( this.startX > getTileset().getWidth() * scale)
             throw new OutOfBoundsException(this.getClass().getSimpleName());
-        this.startY = rounding(startY);
         if ( this.startY > tileset.getHeight() * scale)
             throw new OutOfBoundsException(this.getClass().getSimpleName());
 
+        //Adding baseBlockedScaled to create a square
         this.endX = this.startX + baseBlockScaled;
         this.endY = this.startY + baseBlockScaled;
     }
 
-    public int getStartX() {
-        return startX;
-    }
-
-    public int getStartY() {
-        return startY;
-    }
-
-    public int getEndX() {
-        return endX;
-    }
-
     public void setEndX(int endX) throws OutOfBoundsException {
-        int scale = getTileset().getScaleFactor();
-        BufferedImage scaledTileset = getTileset().getScaledImage();
+        BufferedImage scaledTileset = tileset.getScaledImage();
 
-        int newValue;
-        //Identify the Lowest X coordinate in order to use it as point of reference
+        int scale = tileset.getScaleFactor();
+        int halfScaledBlock = (DEFAULT_ROUNDING * scale) / 2;
+
+        //Round EndX to Block if Selection coordinates exceed HalfScaledBlock
+        int newRoundedX = rounding(baseBlockScaled,endX + halfScaledBlock);
+
+        //Verify if Selector X coordinate exceeds the tileset dimensions
         if (endX > startX) {
-            //Force selection to only have DEFAULT_ROUNDING blocks
-            newValue = rounding(endX - 2 + (DEFAULT_ROUNDING*scale) / 2);
-            if (newValue - startX < baseBlockScaled
-                    || newValue > scaledTileset.getWidth())
+            if (newRoundedX - startX < baseBlockScaled
+                    || newRoundedX > scaledTileset.getWidth())
                 throw new OutOfBoundsException(this.getClass().getSimpleName());
         }else{
-            //Force selection to only have DEFAULT_ROUNDING blocks
-            newValue = rounding(endX + (DEFAULT_ROUNDING*scale/2));
-            if (startX - newValue  < baseBlockScaled || newValue < 0)
+            if (startX - newRoundedX  < baseBlockScaled || newRoundedX < 0)
                 throw new OutOfBoundsException(this.getClass().getSimpleName());
         }
 
-        this.endX = newValue;
+        this.endX = newRoundedX;
         changes.firePropertyChange("selectorResized", null, endX);
-
     }
 
     public void setEndY(int endY) throws OutOfBoundsException {
-        int scale = getTileset().getScaleFactor();
-        BufferedImage scaledTileset = getTileset().getScaledImage();
+        BufferedImage scaledTileset = tileset.getScaledImage();
 
-        int newValue;
-        //Identify the Lowest Y coordinate in order to use it as point of reference
+        int scale = tileset.getScaleFactor();
+        int halfScaledBlock = (DEFAULT_ROUNDING * scale) / 2;
+
+        //Round EndX to Block if Selection coordinates exceed HalfScaledBlock
+        int newRoundedY = rounding(baseBlockScaled,endY + halfScaledBlock);
+
+        //Verify if Selector Y coordinate exceeds the tileset dimensions
         if (endY > startY) {
-            ///Selection is made of DEFAULT_ROUNDING Blocks every time DEFAULT_ROUNDING/2 is reached
-            newValue = rounding(endY + DEFAULT_ROUNDING*scale/2);
-            if (newValue - startY < baseBlockScaled
-                    || newValue > scaledTileset.getHeight())
+            if (newRoundedY - startY < baseBlockScaled
+                    || newRoundedY > scaledTileset.getHeight())
                 throw new OutOfBoundsException(this.getClass().getSimpleName());
         }else{
-            //Force selector to only have DEFAULT_ROUNDING blocks
-            newValue = rounding(endY + (DEFAULT_ROUNDING*scale/2));
-            if (startY - newValue  < baseBlockScaled || newValue < 0)
+            if (startY - newRoundedY  < baseBlockScaled || newRoundedY < 0)
                 throw new OutOfBoundsException(this.getClass().getSimpleName());
         }
 
-        this.endY = newValue;
+        this.endY = newRoundedY;
         changes.firePropertyChange("selectorResized",  null, this.endY);
     }
 
@@ -122,7 +113,7 @@ public class Selector implements PropertyChangeListener{
 
     /**
      * @param evt
-     * When the tileset factor value changes, the selector will automatically resize
+     * When the tileset factor value changes, the selection will automatically resize
      */
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
@@ -140,13 +131,20 @@ public class Selector implements PropertyChangeListener{
         }
     }
 
-    private int rounding(int value){
-        return baseBlockScaled * Math.floorDiv(value,baseBlockScaled);
+    @Override
+    public State getState() {
+        return state;
     }
 
-    private Tileset getTileset(){
+    @Override
+    public void setState(State state) {
+        this.state = state;
+    }
+
+    protected Tileset getTileset(){
         return TilesetController.INSTANCE.getTileset();
     }
+
 
     public void addPropertyChangeListener(PropertyChangeListener l) {
         changes.addPropertyChangeListener(l);
@@ -155,5 +153,4 @@ public class Selector implements PropertyChangeListener{
     public void removePropertyChangeListener(PropertyChangeListener l) {
         changes.removePropertyChangeListener(l);
     }
-
 }
