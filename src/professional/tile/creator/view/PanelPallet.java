@@ -20,7 +20,7 @@ public class PanelPallet extends JPanel {
 
     JPanel jPanelColors;
     JLabel lbTilesetColors;
-    ColorsRepresentation colorsRepresentation;
+    ColorsTilesetRepresentation colorsTilesetRepresentation;
 
     public PanelPallet() {
         initComponents();
@@ -48,11 +48,15 @@ public class PanelPallet extends JPanel {
         jPanelSortDisplayColors.add(lbTilesetColors,BorderLayout.LINE_START);
         jPanelSortDisplayColors.add(btnSortColors,BorderLayout.LINE_END);
 
-        colorsRepresentation = new ColorsRepresentation();
-        JScrollPane scrollPanel = new JScrollPane(colorsRepresentation);
+
+        //ColorTileSet
+        colorsTilesetRepresentation = new ColorsTilesetRepresentation();
+
+        JScrollPane scrollPanel = new JScrollPane(colorsTilesetRepresentation);
         scrollPanel.setVerticalScrollBarPolicy(VERTICAL_SCROLLBAR_ALWAYS);
         scrollPanel.setHorizontalScrollBarPolicy(HORIZONTAL_SCROLLBAR_NEVER);
 
+        //Other stuff
         jPanelColors = new JPanel();
         jPanelColors.setLayout(new BorderLayout());
         jPanelColors.add(jPanelSortDisplayColors, BorderLayout.PAGE_START);

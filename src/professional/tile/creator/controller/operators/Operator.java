@@ -1,4 +1,4 @@
-package professional.tile.creator.controller;
+package professional.tile.creator.controller.operators;
 
 import java.awt.event.*;
 

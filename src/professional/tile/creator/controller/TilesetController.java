@@ -7,7 +7,7 @@ import professional.tile.creator.model.selection.SelectorTileset;
 import professional.tile.creator.model.Tileset;
 import professional.tile.creator.model.TilesetColorManager;
 import professional.tile.creator.model.comparison.*;
-import professional.tile.creator.view.ColorsRepresentation;
+import professional.tile.creator.view.ColorsTilesetRepresentation;
 import professional.tile.creator.view.TileRepresentation;
 
 import java.awt.image.BufferedImage;
@@ -22,18 +22,18 @@ public enum TilesetController {
 
     //View
     private TileRepresentation tileRepresentation;
-    private ColorsRepresentation colorsRepresentation;
+    private ColorsTilesetRepresentation colorsTilesetRepresentation;
 
     public void loadTileset(BufferedImage tileset){
         this.selectorTileset = null;
         this.tileset = new Tileset(tileset);
         this.tileset.addPropertyChangeListener(tileRepresentation);
-        this.tileset.addPropertyChangeListener(colorsRepresentation);
+        this.tileset.addPropertyChangeListener(colorsTilesetRepresentation);
         this.tileset.generateNewScaledImage();
 
         this.tilesetColorManager = new TilesetColorManager(this.tileset);
-        this.tilesetColorManager.addPropertyChangeListener(colorsRepresentation);
-        this.colorsRepresentation.drawTilesetColors();
+        this.tilesetColorManager.addPropertyChangeListener(colorsTilesetRepresentation);
+        this.colorsTilesetRepresentation.drawTilesetColors();
     }
 
     public Tileset getTileset() {
@@ -44,8 +44,8 @@ public enum TilesetController {
         this.tileRepresentation = tileRepresentation;
     }
 
-    public void setColorsRepresentation(ColorsRepresentation colorsRepresentation) {
-        this.colorsRepresentation = colorsRepresentation;
+    public void setColorsTilesetRepresentation(ColorsTilesetRepresentation colorsTilesetRepresentation) {
+        this.colorsTilesetRepresentation = colorsTilesetRepresentation;
     }
 
 

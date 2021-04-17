@@ -1,6 +1,7 @@
-package professional.tile.creator.controller;
+package professional.tile.creator.controller.operators;
 
 import professional.tile.creator.Exceptions.OutOfBoundsException;
+import professional.tile.creator.controller.TilesetController;
 import professional.tile.creator.model.selection.Selector;
 import professional.tile.creator.model.selection.SelectorTileset;
 import professional.tile.creator.model.Tileset;
@@ -37,7 +38,6 @@ public class OperatorTileSelector extends Operator {
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        super.mouseMoved(e);
         SelectorTileset selectorTileset = TilesetController.INSTANCE.getSelectorTileset();
         if (selectorTileset != null) { // deveria ser com estados
             if (selectorTileset.getState() == Selector.State.CREATED

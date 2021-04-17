@@ -10,7 +10,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
-public class SelectorTileset implements Selector{
+public class SelectorTileset implements Selector {
     //Selector coordinates
     protected Tileset tileset;
     protected int startX, startY;

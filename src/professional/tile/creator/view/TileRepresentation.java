@@ -1,7 +1,7 @@
 package professional.tile.creator.view;
 
-import professional.tile.creator.controller.Operator;
-import professional.tile.creator.controller.OperatorTileSelector;
+import professional.tile.creator.controller.operators.Operator;
+import professional.tile.creator.controller.operators.OperatorTileSelector;
 import professional.tile.creator.controller.TilesetController;
 import professional.tile.creator.model.selection.SelectorTileset;
 import professional.tile.creator.model.Tileset;

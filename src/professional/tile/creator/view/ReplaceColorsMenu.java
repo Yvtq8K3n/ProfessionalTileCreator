@@ -1,5 +1,7 @@
 package professional.tile.creator.view;
 
+import professional.tile.creator.view.components.ColorRepresentation;
+
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
@@ -10,7 +12,7 @@ public class ReplaceColorsMenu extends JPanel {
     JButton colorRepresentation;
 
     //jChangeReplaceColor
-    ColorButton colorDisplay;
+    ColorRepresentation colorDisplay;
     ScrollColorDisplay scrollRed;
     ScrollColorDisplay scrollGreen;
     ScrollColorDisplay scrollBlue;
@@ -34,7 +36,7 @@ public class ReplaceColorsMenu extends JPanel {
         colorRepresentation.setPreferredSize(new Dimension(25, 25));
         colorRepresentation.setFocusable(false);
         colorRepresentation.setBorder(new LineBorder(Color.BLACK));
-        colorDisplay = new ColorButton();
+        colorDisplay = new ColorRepresentation();
         colorDisplay.setFocusable(false);
         colorDisplay.setBackground(Color.RED);
 
