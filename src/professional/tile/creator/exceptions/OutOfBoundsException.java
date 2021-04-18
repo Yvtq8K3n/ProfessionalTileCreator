@@ -1,4 +1,4 @@
-package professional.tile.creator.Exceptions;
+package professional.tile.creator.exceptions;
 
 public class OutOfBoundsException extends Exception {
 

@@ -1,31 +1,11 @@
 package professional.tile.creator.model.selection;
 
-import professional.tile.creator.Exceptions.OutOfBoundsException;
-import professional.tile.creator.model.Point;
+import professional.tile.creator.exceptions.OutOfBoundsException;
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 
-public class SelectorColor implements Selector {
+public class SelectorColor extends Selector {
     private final int COLOR_ROUNDING = 25;
-
-    //Selector coordinates
-    protected int startX, startY;
-    protected int endX, endY;
-    private int maxX, maxY;
-
-    //Selector Block Size
-    private int baseBlock;
-
-    //Selector state
-    protected State state;
-    protected PropertyChangeSupport changes;
-
-    private SelectorColor(int startX, int startY){
-        this.baseBlock = COLOR_ROUNDING;
-        this.changes = new PropertyChangeSupport(this);
-        this.state = State.CREATED;
-    }
+    private int maxX, maxY; //Max Bounds
 
     /**
      * @param startX initial position
@@ -35,22 +15,25 @@ public class SelectorColor implements Selector {
      * @throws OutOfBoundsException
      */
     public SelectorColor(int startX, int startY, int maxX, int maxY) throws OutOfBoundsException {
-        this(startX, startY);
+        super();
+        this.baseBlock = COLOR_ROUNDING;
         this.maxX = maxX;
         this.maxY = maxY;
 
         generateCoordinates(startX, startY);
     }
 
-    private void generateCoordinates(int startX, int startY) throws OutOfBoundsException {
+    protected void generateCoordinates(int startX, int startY) throws OutOfBoundsException {
         //Rounding start coordinates based on baseBlockScaled
         this.startX = rounding(baseBlock, startX);
         this.startY = rounding(baseBlock, startY);
 
-        //Making sure start point is created within the bounds of the tileset
-        if ( this.startX > maxX)
+        boolean isStartXOutOfBounds = this.startX > maxX;
+        if (isStartXOutOfBounds)
             throw new OutOfBoundsException(this.getClass().getSimpleName());
-        if ( this.startY > maxY)
+
+        boolean isStartYOutOfBounds = this.startY > maxY;
+        if (isStartYOutOfBounds)
             throw new OutOfBoundsException(this.getClass().getSimpleName());
 
         //Adding baseBlockedScaled to create a square
@@ -58,78 +41,49 @@ public class SelectorColor implements Selector {
         this.endY = this.startY + baseBlock;
     }
 
-    public void setEndX(int endX) throws OutOfBoundsException {
+    protected void setEndX(int endX) throws OutOfBoundsException {
         int halfBlock = (baseBlock) / 2;
+        int newRoundedX = rounding(baseBlock,endX + halfBlock); //Round Block if Selection exceed halfBlock
+        boolean isBlockValid, isRoundXOutOfBounds;
 
-        //Round EndX to Block if Selection coordinates exceed halfBlock
-        int newRoundedX = rounding(baseBlock,endX + halfBlock);
-
-        //Verify if Selector X coordinate exceeds the tileset dimensions
         if (endX > startX) {
-            if (newRoundedX - startX < baseBlock
-                    || newRoundedX > maxX)
-                throw new OutOfBoundsException(this.getClass().getSimpleName());
+            isBlockValid = newRoundedX - startX >= baseBlock;
+            isRoundXOutOfBounds = newRoundedX > maxX;
+
+            if (!isBlockValid || isRoundXOutOfBounds) throw new OutOfBoundsException(this.getClass().getSimpleName());
         }else{
-            if (startX - newRoundedX  < baseBlock || newRoundedX < 0)
-                throw new OutOfBoundsException(this.getClass().getSimpleName());
+            isBlockValid = startX - newRoundedX >= baseBlock;
+            isRoundXOutOfBounds = newRoundedX < 0;
+
+            if (!isBlockValid || isRoundXOutOfBounds) throw new OutOfBoundsException(this.getClass().getSimpleName());
         }
 
         this.endX = newRoundedX;
-        changes.firePropertyChange("selectorResized", null, endX);
     }
 
-    public void setEndY(int endY) throws OutOfBoundsException {
+    protected void setEndY(int endY) throws OutOfBoundsException {
         int halfBlock = (baseBlock) / 2;
-
-        //Round EndX to Block if Selection coordinates exceed HalfScaledBlock
-        int newRoundedY = rounding(baseBlock,endY + halfBlock);
+        int newRoundedY = rounding(baseBlock,endY + halfBlock); //Round Block if Selection exceed halfBlock
+        boolean isBlockValid, isRoundYOutOfBounds;
 
         //Verify if Selector Y coordinate exceeds the tileset dimensions
         if (endY > startY) {
-            if (newRoundedY - startY < baseBlock
-                    || newRoundedY > maxY)
-                throw new OutOfBoundsException(this.getClass().getSimpleName());
+            isBlockValid = newRoundedY - startY >= baseBlock;
+            isRoundYOutOfBounds =  newRoundedY > maxY;
+
+            if (!isBlockValid || isRoundYOutOfBounds) throw new OutOfBoundsException(this.getClass().getSimpleName());
         }else{
-            if (startY - newRoundedY  < baseBlock || newRoundedY < 0)
-                throw new OutOfBoundsException(this.getClass().getSimpleName());
+            isBlockValid = startY - newRoundedY >= baseBlock;
+            isRoundYOutOfBounds =  newRoundedY < 0;
+
+            if (!isBlockValid || isRoundYOutOfBounds) throw new OutOfBoundsException(this.getClass().getSimpleName());
         }
 
         this.endY = newRoundedY;
-        changes.firePropertyChange("selectorResized",  null, this.endY);
-    }
-
-    public Point getLowestPoint(){
-        int lowestX = (endX>startX) ? startX : endX;
-        int lowestY = (endY>startY) ? startY : endY;
-        return new professional.tile.creator.model.Point(lowestX, lowestY);
-    }
-
-    public Point getDimensions(){
-        int width = (endX>startX) ? endX-startX : startX - endX;
-        int height = (endY>startY) ? endY-startY : startY - endY;
-        return new Point(width, height);
-    }
-
-    @Override
-    public State getState() {
-        return state;
-    }
-
-    @Override
-    public void setState(State state) {
-
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
 
-    }
-
-    public void addPropertyChangeListener(PropertyChangeListener l) {
-        changes.addPropertyChangeListener(l);
-    }
-
-    public void removePropertyChangeListener(PropertyChangeListener l) {
-        changes.removePropertyChangeListener(l);
     }
 }

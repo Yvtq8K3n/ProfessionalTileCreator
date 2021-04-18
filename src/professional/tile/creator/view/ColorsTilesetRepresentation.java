@@ -74,7 +74,6 @@ public class ColorsTilesetRepresentation extends JPanel implements PropertyChang
     public void propertyChange(PropertyChangeEvent evt){
         if (evt.getPropertyName().equals("sortedColors")) drawTilesetColors();
         if (evt.getPropertyName().equals("selectorResized")) {
-            System.out.println("was resized");
             revalidate();
             repaint();
         }

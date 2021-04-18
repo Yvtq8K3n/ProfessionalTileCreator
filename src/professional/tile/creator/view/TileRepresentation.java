@@ -41,7 +41,7 @@ public class TileRepresentation extends JPanel implements PropertyChangeListener
         if (tileset!=null && tileset.hasImage()){
             g.drawImage(tileset.getScaledImage(), 0, 0, this);
 
-            SelectorTileset selectorTileset = TilesetController.INSTANCE.getSelectorTileset();
+            SelectorTileset selectorTileset = TilesetController.INSTANCE.getSelector();
             if (selectorTileset !=null){
                 g.setColor(Color.red);
                g.drawRect(selectorTileset.getLowestPoint().getX(), selectorTileset.getLowestPoint().getY(),
