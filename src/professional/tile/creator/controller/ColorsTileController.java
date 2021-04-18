@@ -49,10 +49,10 @@ public enum  ColorsTileController {
     }
 
     public void finishSelector(int endX, int endY) {
-        /*if (selector != null) {
+        if (selector != null) {
             resizeSelector(endX, endY);
-            selector.setState(SelectorTileset.State.FINISH);
-        }*/
+            selector.setState(Selector.State.FINISH);
+        }
     }
 
     public void setColorsTilesetRepresentation(ColorsTilesetRepresentation colorsTilesetRepresentation) {
