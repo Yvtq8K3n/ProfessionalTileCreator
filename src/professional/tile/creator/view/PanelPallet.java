@@ -20,7 +20,7 @@ public class PanelPallet extends JPanel {
 
     JPanel jPanelColors;
     JLabel lbTilesetColors;
-    ColorsTilesetRepresentation colorsTilesetRepresentation;
+    TilesetColorsPanel tilesetColorsPanel;
 
     public PanelPallet() {
         initComponents();
@@ -50,9 +50,8 @@ public class PanelPallet extends JPanel {
 
 
         //ColorTileSet
-        colorsTilesetRepresentation = new ColorsTilesetRepresentation();
-
-        JScrollPane scrollPanel = new JScrollPane(colorsTilesetRepresentation);
+        tilesetColorsPanel = new TilesetColorsPanel();
+        JScrollPane scrollPanel = new JScrollPane(tilesetColorsPanel);
         scrollPanel.setVerticalScrollBarPolicy(VERTICAL_SCROLLBAR_ALWAYS);
         scrollPanel.setHorizontalScrollBarPolicy(HORIZONTAL_SCROLLBAR_NEVER);
 

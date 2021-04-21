@@ -9,7 +9,7 @@ import professional.tile.creator.model.selection.SelectorTileset;
 import professional.tile.creator.model.Tileset;
 import professional.tile.creator.model.TilesetColorManager;
 import professional.tile.creator.model.comparison.*;
-import professional.tile.creator.view.ColorsTilesetRepresentation;
+import professional.tile.creator.view.TilesetColorsPanel;
 import professional.tile.creator.view.TileRepresentation;
 
 import java.awt.image.BufferedImage;
@@ -24,18 +24,18 @@ public enum TilesetController {
 
     //View
     private TileRepresentation tileRepresentation;
-    private ColorsTilesetRepresentation colorsTilesetRepresentation;
+    private TilesetColorsPanel tilesetColorsPanel;
 
     public void loadTileset(BufferedImage tileset){
         this.selector = null;
         this.tileset = new Tileset(tileset);
         this.tileset.addPropertyChangeListener(tileRepresentation);
-        this.tileset.addPropertyChangeListener(colorsTilesetRepresentation);
+        this.tileset.addPropertyChangeListener(tilesetColorsPanel);
         this.tileset.generateNewScaledImage();
 
         this.tilesetColorManager = new TilesetColorManager(this.tileset);
-        this.tilesetColorManager.addPropertyChangeListener(colorsTilesetRepresentation);
-        this.colorsTilesetRepresentation.drawTilesetColors();
+        this.tilesetColorManager.addPropertyChangeListener(tilesetColorsPanel);
+        this.tilesetColorsPanel.reloadTilesetColors();
     }
 
     public Tileset getTileset() {
@@ -46,9 +46,6 @@ public enum TilesetController {
         this.tileRepresentation = tileRepresentation;
     }
 
-    public void setColorsTilesetRepresentation(ColorsTilesetRepresentation colorsTilesetRepresentation) {
-        this.colorsTilesetRepresentation = colorsTilesetRepresentation;
-    }
 
     public void createSelector(int x, int y) {
         boolean selectorIsFinished = selector != null
@@ -110,6 +107,10 @@ public enum TilesetController {
         if (scaleFactor<3){
             tileset.increaseScaleFactor();
         }
+    }
+
+    public void setTilesetColorsPanel(TilesetColorsPanel tilesetColorsPanel) {
+        this.tilesetColorsPanel = tilesetColorsPanel;
     }
 
     public TilesetColorManager getTilesetColorManager() {
