@@ -3,8 +3,8 @@ package professional.tile.creator.view;
 import professional.tile.creator.controller.operators.Operator;
 import professional.tile.creator.controller.operators.OperatorTileSelector;
 import professional.tile.creator.controller.TilesetController;
+import professional.tile.creator.model.TilesetManager;
 import professional.tile.creator.model.selection.SelectorTileset;
-import professional.tile.creator.model.Tileset;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,9 +37,9 @@ public class TileRepresentation extends JPanel implements PropertyChangeListener
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        Tileset tileset = TilesetController.INSTANCE.getTileset();
-        if (tileset!=null && tileset.hasImage()){
-            g.drawImage(tileset.getScaledImage(), 0, 0, this);
+        TilesetManager tilesetManager = TilesetController.INSTANCE.getTilesetManager();
+        if (tilesetManager !=null && tilesetManager.hasImage()){
+            g.drawImage(tilesetManager.getScaledImage(), 0, 0, this);
 
             SelectorTileset selectorTileset = TilesetController.INSTANCE.getSelector();
             if (selectorTileset !=null){

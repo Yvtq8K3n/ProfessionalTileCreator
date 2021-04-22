@@ -8,14 +8,14 @@ import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
-public class Tileset{
+public class TilesetManager {
     private BufferedImage image;
     private BufferedImage scaledImage;
 
     private int scale = 1;
     private PropertyChangeSupport changes = new PropertyChangeSupport(this);
 
-    public Tileset(BufferedImage image) {
+    public TilesetManager(BufferedImage image) {
         this.image = image;
         this.scaledImage = generateScaledImage();
     }

@@ -1,6 +1,7 @@
 package professional.tile.creator.view;
 
 import org.openide.awt.DropDownButtonFactory;
+import professional.tile.creator.controller.ColorsTileController;
 import professional.tile.creator.controller.TilesetController;
 
 import javax.swing.*;
@@ -37,7 +38,7 @@ public class PanelPallet extends JPanel {
         tabbedPane.addTab("Misc", new JPanel());
 
         //jPanelSortDisplayColors
-        lbTilesetColors = new JLabel("Tileset Colors:");
+        lbTilesetColors = new JLabel("TilesetManager Colors:");
         btnSortColors = createbtnDropDown(new ImageIcon("./resources/hueIcon.png"));
         btnSortColors.setPreferredSize(new Dimension(40, 20));
         btnSortColors.setFocusable(false);
@@ -72,23 +73,23 @@ public class PanelPallet extends JPanel {
         JPopupMenu popupMenu = new JPopupMenu();
 
         JMenuItem menuItemColorsbyInvertStep = new JMenuItem("Sort: Colors By InvertStep");
-        menuItemColorsbyInvertStep.addActionListener(e -> TilesetController.INSTANCE.setColorsSort("InverseStep"));
+        menuItemColorsbyInvertStep.addActionListener(e -> ColorsTileController.INSTANCE.setColorsSort("InverseStep"));
         popupMenu.add(menuItemColorsbyInvertStep);
 
         JMenuItem menuItemColorsByLuminosity = new JMenuItem("Sort: Colors By Luminosity");
-        menuItemColorsByLuminosity.addActionListener(e -> TilesetController.INSTANCE.setColorsSort("Luminosity"));
+        menuItemColorsByLuminosity.addActionListener(e -> ColorsTileController.INSTANCE.setColorsSort("Luminosity"));
         popupMenu.add(menuItemColorsByLuminosity);
 
         JMenuItem menuItemColorsByHue = new JMenuItem("Sort: Colors By Hue");
-        menuItemColorsByHue.addActionListener(e -> TilesetController.INSTANCE.setColorsSort("Hue"));
+        menuItemColorsByHue.addActionListener(e -> ColorsTileController.INSTANCE.setColorsSort("Hue"));
         popupMenu.add(menuItemColorsByHue);
 
         JMenuItem menuItemColorsByStep = new JMenuItem("Sort: Colors By Step");
-        menuItemColorsByStep.addActionListener(e -> TilesetController.INSTANCE.setColorsSort("Step"));
+        menuItemColorsByStep.addActionListener(e -> ColorsTileController.INSTANCE.setColorsSort("Step"));
         popupMenu.add(menuItemColorsByStep);
 
         JMenuItem menuItemColorsbyRGBStep = new JMenuItem("Sort: Colors By RGBStep");
-        menuItemColorsbyRGBStep.addActionListener(e -> TilesetController.INSTANCE.setColorsSort("RGBStep"));
+        menuItemColorsbyRGBStep.addActionListener(e -> ColorsTileController.INSTANCE.setColorsSort("RGBStep"));
         popupMenu.add(menuItemColorsbyRGBStep);
 
         return DropDownButtonFactory.createDropDownButton(icon, popupMenu);

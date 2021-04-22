@@ -1,12 +1,11 @@
 package professional.tile.creator.view;
 
 import professional.tile.creator.controller.ColorsTileController;
-import professional.tile.creator.controller.TilesetController;
 import professional.tile.creator.controller.operators.Operator;
 import professional.tile.creator.controller.operators.OperatorColorDeletion;
 import professional.tile.creator.controller.operators.OperatorColorSelection;
 import professional.tile.creator.model.Point;
-import professional.tile.creator.model.TilesetColorManager;
+import professional.tile.creator.model.TilesetColorsManager;
 import professional.tile.creator.model.selection.SelectorColor;
 import professional.tile.creator.view.components.ColorRepresentation;
 
@@ -26,7 +25,6 @@ public class TilesetColorsPanel extends JPanel implements PropertyChangeListener
     public TilesetColorsPanel() {
         setBackground(Color.red);
         setLayout( new OverlayLayout(this));
-        TilesetController.INSTANCE.setTilesetColorsPanel(this);
         ColorsTileController.INSTANCE.setTilesetColorsPanel(this);
 
         initComponents();
@@ -89,7 +87,7 @@ public class TilesetColorsPanel extends JPanel implements PropertyChangeListener
         public void drawTilesetColors(){
             removeAll();
             ArrayList<ColorRepresentation> btnRectangles = new ArrayList<>();
-            TilesetColorManager colorManager = TilesetController.INSTANCE.getTilesetColorManager();
+            TilesetColorsManager colorManager = ColorsTileController.INSTANCE.getTilesetColorsManager();
             Color[] colors = colorManager.getSortedColors();
             for (int i = 0; i<colors.length; i++){
                 System.out.println("Button created");

@@ -1,15 +1,11 @@
 package professional.tile.creator.controller;
 
 
-import professional.tile.creator.exceptions.InvalidOperationException;
 import professional.tile.creator.exceptions.OutOfBoundsException;
 import professional.tile.creator.model.Point;
+import professional.tile.creator.model.TilesetManager;
 import professional.tile.creator.model.selection.Selector;
 import professional.tile.creator.model.selection.SelectorTileset;
-import professional.tile.creator.model.Tileset;
-import professional.tile.creator.model.TilesetColorManager;
-import professional.tile.creator.model.comparison.*;
-import professional.tile.creator.view.TilesetColorsPanel;
 import professional.tile.creator.view.TileRepresentation;
 
 import java.awt.image.BufferedImage;
@@ -18,28 +14,23 @@ public enum TilesetController {
     INSTANCE;
 
     //Model
-    private Tileset tileset;
+    private TilesetManager tilesetManager;
     private SelectorTileset selector;
-    private TilesetColorManager tilesetColorManager;
 
     //View
     private TileRepresentation tileRepresentation;
-    private TilesetColorsPanel tilesetColorsPanel;
 
     public void loadTileset(BufferedImage tileset){
         this.selector = null;
-        this.tileset = new Tileset(tileset);
-        this.tileset.addPropertyChangeListener(tileRepresentation);
-        this.tileset.addPropertyChangeListener(tilesetColorsPanel);
-        this.tileset.generateNewScaledImage();
+        this.tilesetManager = new TilesetManager(tileset);
+        this.tilesetManager.addPropertyChangeListener(tileRepresentation);
+        this.tilesetManager.generateNewScaledImage();
 
-        this.tilesetColorManager = new TilesetColorManager(this.tileset);
-        this.tilesetColorManager.addPropertyChangeListener(tilesetColorsPanel);
-        this.tilesetColorsPanel.reloadTilesetColors();
+        ColorsTileController.INSTANCE.reloadTilesetColors(this.tilesetManager);
     }
 
-    public Tileset getTileset() {
-        return tileset;
+    public TilesetManager getTilesetManager() {
+        return tilesetManager;
     }
 
     public void setTileRepresentation(TileRepresentation tileRepresentation){
@@ -51,14 +42,14 @@ public enum TilesetController {
         boolean selectorIsFinished = selector != null
                 && selector.getState() == Selector.State.FINISH;
 
-        if (tileset != null) {
+        if (tilesetManager != null) {
             if (selector == null || selectorIsFinished) {
                 try {
-                    selector = new SelectorTileset(tileset, x, y);
+                    selector = new SelectorTileset(tilesetManager, x, y);
 
                     //Force colorsTilesetRepresentation to readjust every time selector is resized
                     selector.addPropertyChangeListener(tileRepresentation);
-                    tileset.addPropertyChangeListener(selector);
+                    tilesetManager.addPropertyChangeListener(selector);
 
                     //Reload View
                     tileRepresentation.revalidate();
@@ -96,56 +87,16 @@ public enum TilesetController {
     }
 
     public void reduceScaleFactor(){
-        int scaleFactor = tileset.getScaleFactor();
+        int scaleFactor = tilesetManager.getScaleFactor();
         if (scaleFactor>1){
-            tileset.reduceScaleFactor();
+            tilesetManager.reduceScaleFactor();
         }
     }
 
     public void increaseScaleFactor(){
-        int scaleFactor = tileset.getScaleFactor();
+        int scaleFactor = tilesetManager.getScaleFactor();
         if (scaleFactor<3){
-            tileset.increaseScaleFactor();
-        }
-    }
-
-    public void setTilesetColorsPanel(TilesetColorsPanel tilesetColorsPanel) {
-        this.tilesetColorsPanel = tilesetColorsPanel;
-    }
-
-    public TilesetColorManager getTilesetColorManager() {
-        return tilesetColorManager;
-    }
-
-    public void setTilesetColorManager(TilesetColorManager tilesetColorManager) {
-        this.tilesetColorManager = tilesetColorManager;
-    }
-
-    public void setColorsSort(String colorsSort) {
-        try {
-            switch (colorsSort){
-                case "LastSave":
-                    throw new InvalidOperationException("Sort Method");
-                case "Hue":
-                    tilesetColorManager.setSortComparator(CompareColorsByHue.CRITERIA);
-                break;
-                case "Luminosity":
-                    tilesetColorManager.setSortComparator(CompareColorsByLuminosity.CRITERIA);
-                break;
-                case "Step":
-                    tilesetColorManager.setSortComparator(CompareColorsByStepSorting.CRITERIA);
-                break;
-                case "RGBStep":
-                    tilesetColorManager.setSortComparator(CompareColorsByRGBStepSorting.CRITERIA);
-                break;
-                case "InverseStep":
-                    tilesetColorManager.setSortComparator(CompareColorsByStepInvertSorting.CRITERIA);
-                break;
-                default:
-                    throw new InvalidOperationException("Sort Method");
-            }
-        } catch (InvalidOperationException ex) {
-            System.out.println(ex.getMessage());
+            tilesetManager.increaseScaleFactor();
         }
     }
 }

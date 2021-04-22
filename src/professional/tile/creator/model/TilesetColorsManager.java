@@ -11,18 +11,26 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class TilesetColorManager{
-    private Tileset tileset;
+public class TilesetColorsManager {
+    private TilesetManager tilesetManager;
     private Color[] colors;
 
+    //Order
     private Color[] sortedColors;
     private ColorComparator sortComparator;
+
+    //SelectedColors
+    private ArrayList<Color> selectedColors;
+
+
     private PropertyChangeSupport changes = new PropertyChangeSupport(this);
 
-    public TilesetColorManager(Tileset tileset) {
-        this.tileset = tileset;
+    public TilesetColorsManager(TilesetManager tilesetManager) {
+        this.tilesetManager = tilesetManager;
         this.colors = extractTilesetColors();
+
         setSortComparator(CompareColorsByStepInvertSorting.CRITERIA);
+        this.selectedColors = new ArrayList<>();
     }
 
 
@@ -32,7 +40,7 @@ public class TilesetColorManager{
     // > if color is higher goes front
     // Need to be organized in some kind of visualization patterns
     private Color[] extractTilesetColors(){
-        BufferedImage image = tileset.getImage();
+        BufferedImage image = tilesetManager.getImage();
         List<Color> colors =  new ArrayList<>();
 
         for (int x = 0; x < image.getWidth(); x++) {

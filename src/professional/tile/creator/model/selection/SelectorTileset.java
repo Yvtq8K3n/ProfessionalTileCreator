@@ -2,21 +2,21 @@ package professional.tile.creator.model.selection;
 
 import professional.tile.creator.exceptions.OutOfBoundsException;
 import professional.tile.creator.controller.TilesetController;
-import professional.tile.creator.model.Tileset;
+import professional.tile.creator.model.TilesetManager;
 
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 
 public class SelectorTileset extends Selector {
 
-    protected Tileset tileset;
+    protected TilesetManager tilesetManager;
     private int baseBlockScaled;
 
-    public SelectorTileset(Tileset tileset, int startX, int startY) throws OutOfBoundsException {
+    public SelectorTileset(TilesetManager tilesetManager, int startX, int startY) throws OutOfBoundsException {
         super();
-        this.tileset = tileset;
+        this.tilesetManager = tilesetManager;
         this.baseBlock = DEFAULT_ROUNDING;
-        this.baseBlockScaled = baseBlock * tileset.getScaleFactor();
+        this.baseBlockScaled = baseBlock * tilesetManager.getScaleFactor();
 
         generateCoordinates(startX, startY);
     }
@@ -25,13 +25,13 @@ public class SelectorTileset extends Selector {
         //Rounding start coordinates based on baseBlockScaled
         this.startX = rounding(baseBlockScaled, startX);
         this.startY = rounding(baseBlockScaled, startY);
-        int scale = tileset.getScaleFactor();
+        int scale = tilesetManager.getScaleFactor();
 
-        boolean isStartXOutOfBounds = this.startX > getTileset().getWidth() * scale;
+        boolean isStartXOutOfBounds = this.startX > getTilesetManager().getWidth() * scale;
         if (isStartXOutOfBounds)
             throw new OutOfBoundsException(this.getClass().getSimpleName());
 
-        boolean isStartYOutOfBounds = this.startY > tileset.getHeight() * scale;
+        boolean isStartYOutOfBounds = this.startY > tilesetManager.getHeight() * scale;
         if (isStartYOutOfBounds)
             throw new OutOfBoundsException(this.getClass().getSimpleName());
 
@@ -41,8 +41,8 @@ public class SelectorTileset extends Selector {
     }
 
     protected void setEndX(int endX) throws OutOfBoundsException {
-        BufferedImage scaledTileset = tileset.getScaledImage();
-        int scale = tileset.getScaleFactor();
+        BufferedImage scaledTileset = tilesetManager.getScaledImage();
+        int scale = tilesetManager.getScaleFactor();
         int halfScaledBlock = (DEFAULT_ROUNDING * scale) / 2;
         int newRoundedX = rounding(baseBlockScaled,endX + halfScaledBlock);
         boolean isBlockValid, isRoundXOutOfBounds;
@@ -64,8 +64,8 @@ public class SelectorTileset extends Selector {
     }
 
     protected void setEndY(int endY) throws OutOfBoundsException {
-        BufferedImage scaledTileset = tileset.getScaledImage();
-        int scale = tileset.getScaleFactor();
+        BufferedImage scaledTileset = tilesetManager.getScaledImage();
+        int scale = tilesetManager.getScaleFactor();
         int halfScaledBlock = (DEFAULT_ROUNDING * scale) / 2;
         int newRoundedY = rounding(baseBlockScaled,endY + halfScaledBlock);
         boolean isBlockValid, isRoundYOutOfBounds;
@@ -89,25 +89,25 @@ public class SelectorTileset extends Selector {
 
     /**
      * @param evt
-     * When the tileset factor value changes, the selection will automatically resize
+     * When the tilesetManager factor value changes, the selection will automatically resize
      */
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals("scaleChanged")){
-            Tileset tileset = getTileset();
-            BufferedImage scaledImage = getTileset().getScaledImage();
-            int scale = getTileset().getScaleFactor();
+            TilesetManager tilesetManager = getTilesetManager();
+            BufferedImage scaledImage = getTilesetManager().getScaledImage();
+            int scale = getTilesetManager().getScaleFactor();
 
             //Converts coordinates based OriginalImage and ScaledImage
             baseBlockScaled = baseBlock * scale;
-            startX = startX * tileset.getWidth() / scaledImage.getWidth() * scale;
-            startY = startY * tileset.getHeight() / scaledImage.getHeight() * scale;
-            endX = endX * tileset.getWidth() / scaledImage.getWidth() * scale;
-            endY = endY * tileset.getHeight() / scaledImage.getHeight() * scale;
+            startX = startX * tilesetManager.getWidth() / scaledImage.getWidth() * scale;
+            startY = startY * tilesetManager.getHeight() / scaledImage.getHeight() * scale;
+            endX = endX * tilesetManager.getWidth() / scaledImage.getWidth() * scale;
+            endY = endY * tilesetManager.getHeight() / scaledImage.getHeight() * scale;
         }
     }
 
-    protected Tileset getTileset(){
-        return TilesetController.INSTANCE.getTileset();
+    protected TilesetManager getTilesetManager(){
+        return TilesetController.INSTANCE.getTilesetManager();
     }
 }

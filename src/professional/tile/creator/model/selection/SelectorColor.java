@@ -66,7 +66,7 @@ public class SelectorColor extends Selector {
         int newRoundedY = rounding(baseBlock,endY + halfBlock); //Round Block if Selection exceed halfBlock
         boolean isBlockValid, isRoundYOutOfBounds;
 
-        //Verify if Selector Y coordinate exceeds the tileset dimensions
+        //Verify if Selector Y coordinate exceeds the tilesetManager dimensions
         if (endY > startY) {
             isBlockValid = newRoundedY - startY >= baseBlock;
             isRoundYOutOfBounds =  newRoundedY > maxY;
