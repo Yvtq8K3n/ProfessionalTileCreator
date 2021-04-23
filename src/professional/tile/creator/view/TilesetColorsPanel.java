@@ -18,9 +18,12 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 
 public class TilesetColorsPanel extends JPanel implements PropertyChangeListener{
+    //Model
+    protected TilesetColorsManager colorManager;
 
-    protected Representation colorTilesetRepresentation;
-    protected Selection colorTilesetSelection;
+    //View
+    protected Representation representation;
+    protected Selection selection;
 
     public TilesetColorsPanel() {
         setBackground(Color.red);
@@ -31,11 +34,11 @@ public class TilesetColorsPanel extends JPanel implements PropertyChangeListener
     }
 
     private void initComponents() {
-        colorTilesetSelection = new Selection();
-        colorTilesetRepresentation = new Representation();
+        selection = new Selection();
+        representation = new Representation();
 
-        add(colorTilesetSelection, BorderLayout.CENTER); // add transparent panel first
-        add(colorTilesetRepresentation, BorderLayout.CENTER);
+        add(selection, BorderLayout.CENTER); // add transparent panel first
+        add(representation, BorderLayout.CENTER);
     }
 
     public void redraw(){
@@ -44,23 +47,38 @@ public class TilesetColorsPanel extends JPanel implements PropertyChangeListener
     }
 
     public void reloadTilesetColors() {
-        colorTilesetRepresentation.drawTilesetColors();
+        representation.drawTilesetColors();
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt){
-        if (evt.getPropertyName().equals("sortedColors")) colorTilesetRepresentation.drawTilesetColors();
+        if (evt.getPropertyName().equals("sortedColors")) {
+            representation.drawTilesetColors();
+            selection.redrawSelectorsPosition();
+        }
         if (evt.getPropertyName().equals("selectorResized")) {
             redraw();
         }
     }
 
     public void removeSelection(SelectorColor selector) {
-        colorTilesetSelection.remove(selector);
+        selection.remove(selector);
     }
 
     public void addSelection(SelectorColor selector) {
-        colorTilesetSelection.add(selector);
+        selection.add(selector);
+    }
+
+    public ArrayList<Color> retrieveSelectedColors() {
+        SelectorColor c = ColorsTileController.INSTANCE.getSelector();
+        Point start = c.getLowestPoint();
+        Point end = c.getDimensions();
+        end = new Point(start.getX() + end.getX(), start.getY() + end.getY());
+        return representation.retrieveColors(start, end);
+    }
+
+    public void setColorManager(TilesetColorsManager colorManager) {
+        this.colorManager = colorManager;
     }
 
     protected class Representation extends JPanel implements MouseListener, MouseMotionListener, MouseWheelListener {
@@ -87,7 +105,6 @@ public class TilesetColorsPanel extends JPanel implements PropertyChangeListener
         public void drawTilesetColors(){
             removeAll();
             ArrayList<ColorRepresentation> btnRectangles = new ArrayList<>();
-            TilesetColorsManager colorManager = ColorsTileController.INSTANCE.getTilesetColorsManager();
             Color[] colors = colorManager.getSortedColors();
             for (int i = 0; i<colors.length; i++){
                 System.out.println("Button created");
@@ -99,9 +116,19 @@ public class TilesetColorsPanel extends JPanel implements PropertyChangeListener
 
             //Resize Panel to accommodate the new buttons
             int btnRows = (btnRectangles.size() / 8) + 1;
-            setPreferredSize(new Dimension(getWidth(), btnRows * ColorRepresentation.DIMENSION));
-            getParent().repaint();
-            getParent().revalidate();
+            setPreferredSize(new Dimension(getWidth(), btnRows * ColorRepresentation.AREA/2));
+            redraw();
+        }
+
+        public ArrayList<Color> retrieveColors(Point start, Point end){
+            ArrayList<Color> colors = new ArrayList<>();
+            for (int i=start.getY(); i<end.getY()+1; i+=ColorRepresentation.AREA){
+                for (int j=start.getX(); j<end.getX(); j+=ColorRepresentation.AREA){
+                    ColorRepresentation rep = (ColorRepresentation) getComponentAt(j, i);
+                    colors.add(rep.getBackground());
+                }
+            }
+            return colors;
         }
 
         @Override
@@ -189,21 +216,44 @@ public class TilesetColorsPanel extends JPanel implements PropertyChangeListener
         }
 
         public void add(SelectorColor selector) {
-            professional.tile.creator.model.Point position = selector.getLowestPoint();
+            Point position = selector.getLowestPoint();
             Point dimensions = selector.getDimensions();
 
+            add(position, dimensions);
+        }
+
+        private void add(Point position, Point dimensions) {
             Rectangle rec = new Rectangle(position.getX(), position.getY(),
                     dimensions.getX(),dimensions.getY());
             selectedArea.add(new Area(rec));
         }
 
         public void remove(SelectorColor selector) {
-            professional.tile.creator.model.Point position = selector.getLowestPoint();
+            Point position = selector.getLowestPoint();
             Point dimensions = selector.getDimensions();
 
             Rectangle rec = new Rectangle(position.getX(), position.getY(),
                     dimensions.getX(),dimensions.getY());
             selectedArea.subtract(new Area(rec));
+        }
+
+        public void redrawSelectorsPosition() {
+            selectedArea = new Area();
+            Color[] sortedColors = colorManager.getSortedColors();
+            ArrayList<Color> selectedColors = colorManager.getSelectedColors();
+
+            for(int i=0; i<sortedColors.length; i++) {
+                int y = i / 8;
+                int x = i % 8;
+                //Is one the current color selected?
+                if (selectedColors.contains(sortedColors[i])) {
+                    int relY = y * ColorRepresentation.AREA/2;
+                    int relX = x * ColorRepresentation.AREA/2;
+                    //System.out.println(relY +":"+relX);
+                    add(new Point(relX, relY), new Point(ColorRepresentation.AREA/2, ColorRepresentation.AREA/2));
+                    System.out.println("ola");
+                }
+            }
         }
     }
 }

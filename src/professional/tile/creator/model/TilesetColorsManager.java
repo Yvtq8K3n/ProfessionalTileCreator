@@ -22,7 +22,6 @@ public class TilesetColorsManager {
     //SelectedColors
     private ArrayList<Color> selectedColors;
 
-
     private PropertyChangeSupport changes = new PropertyChangeSupport(this);
 
     public TilesetColorsManager(TilesetManager tilesetManager) {
@@ -78,4 +77,15 @@ public class TilesetColorsManager {
         changes.removePropertyChangeListener(l);
     }
 
+    public void addColorsSelection(ArrayList<Color> colors) {
+        for (Color color:colors) {
+            if (!selectedColors.contains(color)){
+                selectedColors.add(color);
+            }
+        }
+    }
+
+    public ArrayList<Color> getSelectedColors() {
+        return selectedColors;
+    }
 }

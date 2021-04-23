@@ -10,6 +10,9 @@ import professional.tile.creator.model.selection.Selector;
 import professional.tile.creator.model.selection.SelectorColor;
 import professional.tile.creator.view.TilesetColorsPanel;
 
+import java.awt.*;
+import java.util.ArrayList;
+
 public enum  ColorsTileController {
     INSTANCE;
 
@@ -23,6 +26,7 @@ public enum  ColorsTileController {
     public void reloadTilesetColors(TilesetManager tilesetManager){
         this.tilesetColorsManager = new TilesetColorsManager(tilesetManager);
         this.tilesetColorsManager.addPropertyChangeListener(tilesetColorsPanel);
+        this.tilesetColorsPanel.setColorManager(tilesetColorsManager);
         this.tilesetColorsPanel.reloadTilesetColors();
     }
 
@@ -68,6 +72,9 @@ public enum  ColorsTileController {
             resizeSelector(endX, endY);
             selector.setState(Selector.State.FINISH);
             tilesetColorsPanel.addSelection(selector);
+
+            ArrayList<Color> colors = tilesetColorsPanel.retrieveSelectedColors();
+            tilesetColorsManager.addColorsSelection(colors);
         }
         selector = null;
     }
@@ -92,27 +99,29 @@ public enum  ColorsTileController {
 
     public void setColorsSort(String colorsSort) {
         try {
+            ColorComparator criteria = null;
             switch (colorsSort){
                 case "LastSave":
                     throw new InvalidOperationException("Sort Method");
                 case "Hue":
-                    tilesetColorsManager.setSortComparator(CompareColorsByHue.CRITERIA);
+                    criteria = CompareColorsByHue.CRITERIA;
                     break;
                 case "Luminosity":
-                    tilesetColorsManager.setSortComparator(CompareColorsByLuminosity.CRITERIA);
+                    criteria = CompareColorsByLuminosity.CRITERIA;
                     break;
                 case "Step":
-                    tilesetColorsManager.setSortComparator(CompareColorsByStepSorting.CRITERIA);
+                    criteria = CompareColorsByStepSorting.CRITERIA;
                     break;
                 case "RGBStep":
-                    tilesetColorsManager.setSortComparator(CompareColorsByRGBStepSorting.CRITERIA);
+                    criteria = CompareColorsByRGBStepSorting.CRITERIA;
                     break;
                 case "InverseStep":
-                    tilesetColorsManager.setSortComparator(CompareColorsByStepInvertSorting.CRITERIA);
+                    criteria = CompareColorsByStepInvertSorting.CRITERIA;
                     break;
                 default:
                     throw new InvalidOperationException("Sort Method");
             }
+            tilesetColorsManager.setSortComparator(criteria);
         } catch (InvalidOperationException ex) {
             System.out.println(ex.getMessage());
         }
