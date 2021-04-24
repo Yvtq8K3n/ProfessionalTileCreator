@@ -21,6 +21,11 @@ public class ColorRepresentation extends AbstractButton {
         setOpaque(true);
     }
 
+    public ColorRepresentation(int dimension) {
+        this();
+        setPreferredSize(new Dimension(dimension, dimension));
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
         g.setColor(getBackground());

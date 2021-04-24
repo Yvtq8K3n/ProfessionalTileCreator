@@ -33,8 +33,8 @@ public class PanelPallet extends JPanel {
 
         tabbedPane = new JTabbedPane();
         tabbedPane.setPreferredSize(new Dimension(175, 280));
-        tabbedPane.addTab("Replace", replaceColorsMenu);
-        tabbedPane.addTab("Inspector", new JPanel());
+        tabbedPane.addTab("Replace", new ColorReplacer());//Single Operations
+        tabbedPane.addTab("Selector", replaceColorsMenu);//MultiOperations
         tabbedPane.addTab("Misc", new JPanel());
 
         //jPanelSortDisplayColors
