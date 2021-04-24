@@ -11,12 +11,13 @@ public class ColorRepresentation extends AbstractButton {
     }
 
     public final static int AREA = 50;
+    public final static int DIMENSION = AREA/2;
     private State state;
 
     public ColorRepresentation() {
         super();
         this.state = State.INACTIVE;
-        setPreferredSize(new Dimension(AREA/2, AREA/2));
+        setPreferredSize(new Dimension(DIMENSION, DIMENSION));
         setOpaque(true);
     }
 

@@ -116,14 +116,15 @@ public class TilesetColorsPanel extends JPanel implements PropertyChangeListener
 
             //Resize Panel to accommodate the new buttons
             int btnRows = (btnRectangles.size() / 8) + 1;
-            setPreferredSize(new Dimension(getWidth(), btnRows * ColorRepresentation.AREA/2));
+            setPreferredSize(new Dimension(getWidth(), btnRows * ColorRepresentation.DIMENSION));
             redraw();
         }
 
         public ArrayList<Color> retrieveColors(Point start, Point end){
             ArrayList<Color> colors = new ArrayList<>();
-            for (int i=start.getY(); i<end.getY()+1; i+=ColorRepresentation.AREA){
-                for (int j=start.getX(); j<end.getX(); j+=ColorRepresentation.AREA){
+            for (int i=start.getY(); i<end.getY(); i+=ColorRepresentation.DIMENSION){
+                for (int j=start.getX(); j<end.getX(); j+=ColorRepresentation.DIMENSION){
+                    System.out.println(j+":"+i);
                     ColorRepresentation rep = (ColorRepresentation) getComponentAt(j, i);
                     colors.add(rep.getBackground());
                 }
@@ -245,13 +246,15 @@ public class TilesetColorsPanel extends JPanel implements PropertyChangeListener
             for(int i=0; i<sortedColors.length; i++) {
                 int y = i / 8;
                 int x = i % 8;
-                //Is one the current color selected?
+                //Is one of the current color selected?
                 if (selectedColors.contains(sortedColors[i])) {
-                    int relY = y * ColorRepresentation.AREA/2;
-                    int relX = x * ColorRepresentation.AREA/2;
-                    //System.out.println(relY +":"+relX);
-                    add(new Point(relX, relY), new Point(ColorRepresentation.AREA/2, ColorRepresentation.AREA/2));
-                    System.out.println("ola");
+                    System.out.println(selectedColors.size());
+                    System.out.println(sortedColors[i]);
+                    int relY = y * ColorRepresentation.DIMENSION;
+                    int relX = x * ColorRepresentation.DIMENSION;
+
+                    //Add Selection
+                    add(new Point(relX, relY), new Point(ColorRepresentation.DIMENSION, ColorRepresentation.DIMENSION));
                 }
             }
         }
