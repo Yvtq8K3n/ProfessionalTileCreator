@@ -1,5 +1,6 @@
 package professional.tile.creator.model;
 
+import professional.tile.creator.exceptions.InvalidOperationException;
 import professional.tile.creator.model.comparison.*;
 
 import java.awt.*;
@@ -20,6 +21,7 @@ public class TilesetColorsManager {
     private ColorComparator sortComparator;
 
     //SelectedColors
+    private Color selectedColor;
     private ArrayList<Color> selectedColors;
 
     private PropertyChangeSupport changes = new PropertyChangeSupport(this);
@@ -69,6 +71,30 @@ public class TilesetColorsManager {
         changes.firePropertyChange("sortedColors",  null, newSortedColors);
     }
 
+    public void addSelectedColors(ArrayList<Color> colors) {
+        selectedColor = colors.get(0);
+        for (Color color:colors) {
+            if (!selectedColors.contains(color)){
+                selectedColors.add(color);
+            }
+        }
+        changes.firePropertyChange("selectedColor", null, selectedColor);
+    }
+
+    public ArrayList<Color> getSelectedColors() {
+        return selectedColors;
+    }
+
+    public void removeSelectedColors(ArrayList<Color> colors) {
+        for (Color color:colors) {
+                selectedColors.remove(color);
+        }
+    }
+
+    public Color getSelectedColor() {
+        return selectedColor;
+    }
+
     public void addPropertyChangeListener(PropertyChangeListener l) {
         changes.addPropertyChangeListener(l);
     }
@@ -77,15 +103,4 @@ public class TilesetColorsManager {
         changes.removePropertyChangeListener(l);
     }
 
-    public void addColorsSelection(ArrayList<Color> colors) {
-        for (Color color:colors) {
-            if (!selectedColors.contains(color)){
-                selectedColors.add(color);
-            }
-        }
-    }
-
-    public ArrayList<Color> getSelectedColors() {
-        return selectedColors;
-    }
 }

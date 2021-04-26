@@ -28,11 +28,11 @@ public class SelectorColor extends Selector {
         this.startX = rounding(baseBlock, startX);
         this.startY = rounding(baseBlock, startY);
 
-        boolean isStartXOutOfBounds = this.startX > maxX;
+        boolean isStartXOutOfBounds = this.startX <0 || this.startX >= maxX;
         if (isStartXOutOfBounds)
             throw new OutOfBoundsException(this.getClass().getSimpleName());
 
-        boolean isStartYOutOfBounds = this.startY > maxY;
+        boolean isStartYOutOfBounds = this.startY <0 || this.startY >= maxY;
         if (isStartYOutOfBounds)
             throw new OutOfBoundsException(this.getClass().getSimpleName());
 

@@ -5,6 +5,8 @@ import professional.tile.creator.controller.ColorsTileController;
 import professional.tile.creator.controller.TilesetController;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 
 
@@ -13,7 +15,9 @@ import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS;
 
 public class PanelPallet extends JPanel {
 
+
     JTabbedPane tabbedPane;
+    ColorReplacer colorReplacer;
     ReplaceColorsMenu replaceColorsMenu;
 
     JPanel jPanelSortDisplayColors;
@@ -29,11 +33,12 @@ public class PanelPallet extends JPanel {
 
     public void initComponents(){
         //tabbedPane
+        colorReplacer = new ColorReplacer();
         replaceColorsMenu = new ReplaceColorsMenu();
 
         tabbedPane = new JTabbedPane();
         tabbedPane.setPreferredSize(new Dimension(175, 280));
-        tabbedPane.addTab("Replace", new ColorReplacer());//Single Operations
+        tabbedPane.addTab("Replace", colorReplacer);//Single Operations
         tabbedPane.addTab("Selector", replaceColorsMenu);//MultiOperations
         tabbedPane.addTab("Misc", new JPanel());
 
@@ -63,10 +68,29 @@ public class PanelPallet extends JPanel {
         jPanelColors.add(scrollPanel, BorderLayout.CENTER);
 
 
+
         //PanelPallet
+        addActions();
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         add(tabbedPane);
         add(jPanelColors);
+    }
+
+    private void addActions() {
+        tabbedPane.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                int index = tabbedPane.getSelectedIndex();
+                boolean isSingleSelectionTab = index == 0;
+                boolean isMultiSelectionTab = index ==1;
+
+                if (isSingleSelectionTab){
+                    tilesetColorsPanel.setOperator(TilesetColorsPanel.Operation.SINGLE);
+                }
+                if (isMultiSelectionTab){
+                    tilesetColorsPanel.setOperator(TilesetColorsPanel.Operation.MULTI);
+                }
+            }
+        });
     }
 
     public JButton createbtnDropDown(ImageIcon icon){

@@ -5,23 +5,23 @@ import professional.tile.creator.controller.ColorsTileController;
 
 import java.awt.event.MouseEvent;
 
-public class OperatorColorDeletion extends Operator {
+public class OperatorMultiColorSelection extends Operator {
 
     @Override
     public void mousePressed(MouseEvent e) {
         ColorsTileController.INSTANCE.createSelector(e.getX(), e.getY());
-        System.out.println("ColorDeletion: CREATING");
+        System.out.println("ColorSelection: CREATING");
     }
 
     @Override
     public void mouseDragged(MouseEvent e) {
         ColorsTileController.INSTANCE.resizeSelector(e.getX(), e.getY());
-        System.out.println("ColorDeletion: RESIZING");
+        System.out.println("ColorSelector: RESIZING");
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        ColorsTileController.INSTANCE.removeFromSelection(e.getX(), e.getY());
-        System.out.println("ColorDeletion: FINISHING");
+        ColorsTileController.INSTANCE.addToSelection(e.getX(), e.getY());
+        System.out.println("ColorSelector: FINISHING");
     }
 }

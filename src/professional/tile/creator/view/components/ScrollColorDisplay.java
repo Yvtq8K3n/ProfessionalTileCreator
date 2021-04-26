@@ -6,8 +6,8 @@ import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 
 public class ScrollColorDisplay extends JComponent implements AdjustmentListener{
-    protected static final int MAX_VALUE = 248;
-    protected static final int MIN_VALUE = 0;
+    public static final int MAX_VALUE = 248;
+    public static final int MIN_VALUE = 0;
 
     JScrollBar jScrollBar;
     JTextField textField;

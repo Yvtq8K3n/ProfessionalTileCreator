@@ -8,10 +8,11 @@ import professional.tile.creator.model.TilesetColorsManager;
 import professional.tile.creator.model.comparison.*;
 import professional.tile.creator.model.selection.Selector;
 import professional.tile.creator.model.selection.SelectorColor;
+import professional.tile.creator.view.ColorReplacer;
 import professional.tile.creator.view.TilesetColorsPanel;
 
-import java.awt.*;
 import java.util.ArrayList;
+import java.awt.*;
 
 public enum  ColorsTileController {
     INSTANCE;
@@ -19,16 +20,40 @@ public enum  ColorsTileController {
     //Model
     private TilesetColorsManager tilesetColorsManager;
     private SelectorColor selector;
+    private SelectorColor previousSelector;
 
     //View
     private TilesetColorsPanel tilesetColorsPanel;
+    private ColorReplacer colorReplacer;
 
     public void reloadTilesetColors(TilesetManager tilesetManager){
+        //TilesetMenu
         this.tilesetColorsManager = new TilesetColorsManager(tilesetManager);
         this.tilesetColorsManager.addPropertyChangeListener(tilesetColorsPanel);
         this.tilesetColorsPanel.setColorManager(tilesetColorsManager);
         this.tilesetColorsPanel.reloadTilesetColors();
+
+        //PanelPallet
+        this.tilesetColorsManager.addPropertyChangeListener(colorReplacer);
     }
+
+    public void createSimpleSelector(int startX, int startY){
+        removePreviousSelection(); //Remove all previous selections
+        createSelector(startX, startY); //Create selection
+        addToSelection(startX, startY); //Add selection to view
+
+    }
+
+    private void removePreviousSelection() {
+        if (previousSelector!=null){
+            tilesetColorsPanel.removeSelection(previousSelector);
+
+            ArrayList<Color> colors = tilesetColorsPanel.retrieveSelectedColors(previousSelector);
+            tilesetColorsManager.removeSelectedColors(colors);
+        }
+        previousSelector = null;
+    }
+
 
     public void createSelector(int startX, int startY){
         boolean selectorIsFinished = selector!=null
@@ -73,9 +98,10 @@ public enum  ColorsTileController {
             selector.setState(Selector.State.FINISH);
             tilesetColorsPanel.addSelection(selector);
 
-            ArrayList<Color> colors = tilesetColorsPanel.retrieveSelectedColors();
-            tilesetColorsManager.addColorsSelection(colors);
+            ArrayList<Color> colors = tilesetColorsPanel.retrieveSelectedColors(selector);
+            tilesetColorsManager.addSelectedColors(colors);
         }
+        previousSelector = selector;
         selector = null;
     }
 
@@ -84,6 +110,9 @@ public enum  ColorsTileController {
             resizeSelector(endX, endY);
             selector.setState(Selector.State.FINISH);
             tilesetColorsPanel.removeSelection(selector);
+
+            ArrayList<Color> colors = tilesetColorsPanel.retrieveSelectedColors(selector);
+            tilesetColorsManager.removeSelectedColors(colors);
         }
         selector = null;
     }
@@ -129,5 +158,13 @@ public enum  ColorsTileController {
 
     public TilesetColorsManager getTilesetColorsManager() {
         return tilesetColorsManager;
+    }
+
+    public void setColorReplacer(ColorReplacer colorReplacer) {
+        this.colorReplacer = colorReplacer;
+    }
+
+    public Color getSelectedColor(){
+        return this.tilesetColorsManager.getSelectedColor();
     }
 }

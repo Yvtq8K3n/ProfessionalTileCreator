@@ -1,11 +1,7 @@
 package professional.tile.creator.view;
 
-import professional.tile.creator.controller.TilesetController;
-
 import javax.swing.*;
 import java.awt.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 public class ApplicationView extends JFrame {
     PanelTileset panelTileset;

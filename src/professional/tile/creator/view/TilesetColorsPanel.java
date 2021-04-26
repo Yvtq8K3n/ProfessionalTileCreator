@@ -2,10 +2,13 @@ package professional.tile.creator.view;
 
 import professional.tile.creator.controller.ColorsTileController;
 import professional.tile.creator.controller.operators.Operator;
-import professional.tile.creator.controller.operators.OperatorColorDeletion;
-import professional.tile.creator.controller.operators.OperatorColorSelection;
+import professional.tile.creator.controller.operators.OperatorMultiColorDeletion;
+import professional.tile.creator.controller.operators.OperatorMultiColorSelection;
+import professional.tile.creator.controller.operators.OperatorSingleColorSelection;
+import professional.tile.creator.exceptions.InvalidOperationException;
 import professional.tile.creator.model.Point;
 import professional.tile.creator.model.TilesetColorsManager;
+import professional.tile.creator.model.selection.Selector;
 import professional.tile.creator.model.selection.SelectorColor;
 import professional.tile.creator.view.components.ColorRepresentation;
 
@@ -18,6 +21,11 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 
 public class TilesetColorsPanel extends JPanel implements PropertyChangeListener{
+    public enum Operation{
+        SINGLE,
+        MULTI
+    }
+
     //Model
     protected TilesetColorsManager colorManager;
 
@@ -69,16 +77,23 @@ public class TilesetColorsPanel extends JPanel implements PropertyChangeListener
         selection.add(selector);
     }
 
-    public ArrayList<Color> retrieveSelectedColors() {
-        SelectorColor c = ColorsTileController.INSTANCE.getSelector();
-        Point start = c.getLowestPoint();
-        Point end = c.getDimensions();
+    public ArrayList<Color> retrieveSelectedColors(SelectorColor selector) {
+        Point start = selector.getLowestPoint();
+        Point end = selector.getDimensions();
         end = new Point(start.getX() + end.getX(), start.getY() + end.getY());
         return representation.retrieveColors(start, end);
     }
 
     public void setColorManager(TilesetColorsManager colorManager) {
         this.colorManager = colorManager;
+    }
+
+    public void setOperator(Operation operation){
+        try {
+            representation.setOperation(operation);
+        } catch (InvalidOperationException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     protected class Representation extends JPanel implements MouseListener, MouseMotionListener, MouseWheelListener {
@@ -96,9 +111,10 @@ public class TilesetColorsPanel extends JPanel implements PropertyChangeListener
             addMouseWheelListener(this);
 
             //Create operators
-            operadores = new Operator[2];
-            operadores[0] = new OperatorColorSelection();
-            operadores[1] = new OperatorColorDeletion();
+            operadores = new Operator[3];
+            operadores[0] = new OperatorSingleColorSelection();
+            operadores[1] = new OperatorMultiColorSelection();
+            operadores[2] = new OperatorMultiColorDeletion();
             operatorAtual = operadores[0];
         }
 
@@ -132,6 +148,19 @@ public class TilesetColorsPanel extends JPanel implements PropertyChangeListener
             return colors;
         }
 
+        public void setOperation(Operation operation) throws InvalidOperationException {
+            switch (operation){
+                case SINGLE:
+                    operatorAtual = operadores[0];
+                break;
+                case MULTI:
+                    operatorAtual = operadores[1];
+                break;
+                default:
+                    throw new InvalidOperationException("Operation:");
+            }
+        }
+
         @Override
         protected void paintChildren(Graphics g) {
             super.paintChildren(g);
@@ -151,10 +180,14 @@ public class TilesetColorsPanel extends JPanel implements PropertyChangeListener
 
         @Override
         public void mousePressed(MouseEvent e) {
-            if(e.getButton() == MouseEvent.BUTTON1) {
-                operatorAtual = operadores[0];
-            }else if (e.getButton() == MouseEvent.BUTTON3){
-                operatorAtual = operadores[1];
+            boolean isOperationSingle = operatorAtual == operadores[0];
+
+            if (!isOperationSingle) {
+                if (e.getButton() == MouseEvent.BUTTON1) {
+                    operatorAtual = operadores[1];
+                } else if (e.getButton() == MouseEvent.BUTTON3) {
+                    operatorAtual = operadores[2];
+                }
             }
             operatorAtual.mousePressed(e);
         }
@@ -188,7 +221,6 @@ public class TilesetColorsPanel extends JPanel implements PropertyChangeListener
         public void mouseWheelMoved(MouseWheelEvent e) {
             operatorAtual.mouseWheelMoved(e);
         }
-
     }
 
     protected class Selection extends JPanel {
