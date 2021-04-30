@@ -1,6 +1,8 @@
 package professional.tile.creator.model.selection;
 
 import professional.tile.creator.exceptions.OutOfBoundsException;
+import professional.tile.creator.model.Point;
+
 import java.beans.PropertyChangeEvent;
 
 public class SelectorColor extends Selector {
@@ -50,12 +52,12 @@ public class SelectorColor extends Selector {
             isBlockValid = newRoundedX - startX >= baseBlock;
             isRoundXOutOfBounds = newRoundedX > maxX;
 
-            if (!isBlockValid || isRoundXOutOfBounds) throw new OutOfBoundsException(this.getClass().getSimpleName());
+            if (!isBlockValid || isRoundXOutOfBounds) throw new OutOfBoundsException("endX coordinate");
         }else{
             isBlockValid = startX - newRoundedX >= baseBlock;
             isRoundXOutOfBounds = newRoundedX < 0;
 
-            if (!isBlockValid || isRoundXOutOfBounds) throw new OutOfBoundsException(this.getClass().getSimpleName());
+            if (!isBlockValid || isRoundXOutOfBounds) throw new OutOfBoundsException("endX coordinate");
         }
 
         this.endX = newRoundedX;
@@ -71,15 +73,25 @@ public class SelectorColor extends Selector {
             isBlockValid = newRoundedY - startY >= baseBlock;
             isRoundYOutOfBounds =  newRoundedY > maxY;
 
-            if (!isBlockValid || isRoundYOutOfBounds) throw new OutOfBoundsException(this.getClass().getSimpleName());
+            if (!isBlockValid || isRoundYOutOfBounds) throw new OutOfBoundsException("endY coordinate");
         }else{
             isBlockValid = startY - newRoundedY >= baseBlock;
             isRoundYOutOfBounds =  newRoundedY < 0;
 
-            if (!isBlockValid || isRoundYOutOfBounds) throw new OutOfBoundsException(this.getClass().getSimpleName());
+            if (!isBlockValid || isRoundYOutOfBounds) throw new OutOfBoundsException("endY coordinate");
         }
 
         this.endY = newRoundedY;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof SelectorColor){
+            SelectorColor selector = (SelectorColor) obj;
+            return selector.startX == startX && selector.startY == startY &&
+                    selector.endX == endX && selector.endY == endY;
+        }
+        return false;
     }
 
     @Override

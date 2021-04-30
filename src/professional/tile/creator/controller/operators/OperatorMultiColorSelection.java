@@ -21,7 +21,8 @@ public class OperatorMultiColorSelection extends Operator {
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        ColorsTileController.INSTANCE.addToSelection(e.getX(), e.getY());
+        mouseDragged(e);
+        ColorsTileController.INSTANCE.addToSelection();
         System.out.println("ColorSelector: FINISHING");
     }
 }

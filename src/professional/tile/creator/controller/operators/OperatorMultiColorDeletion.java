@@ -21,7 +21,8 @@ public class OperatorMultiColorDeletion extends Operator {
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        ColorsTileController.INSTANCE.removeFromSelection(e.getX(), e.getY());
+        mouseDragged(e);
+        ColorsTileController.INSTANCE.removeFromSelection();
         System.out.println("ColorDeletion: FINISHING");
     }
 }

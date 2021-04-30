@@ -13,6 +13,7 @@ import professional.tile.creator.view.TilesetColorsPanel;
 
 import java.util.ArrayList;
 import java.awt.*;
+import java.util.Iterator;
 
 public enum  ColorsTileController {
     INSTANCE;
@@ -37,45 +38,21 @@ public enum  ColorsTileController {
         this.tilesetColorsManager.addPropertyChangeListener(colorReplacer);
     }
 
-    public void createSimpleSelector(int startX, int startY){
-        removePreviousSelection(); //Remove all previous selections
-        createSelector(startX, startY); //Create selection
-        addToSelection(startX, startY); //Add selection to view
-
-    }
-
-    private void removePreviousSelection() {
-        if (previousSelector!=null){
-            tilesetColorsPanel.removeSelection(previousSelector);
-
-            ArrayList<Color> colors = tilesetColorsPanel.retrieveSelectedColors(previousSelector);
-            tilesetColorsManager.removeSelectedColors(colors);
-        }
-        previousSelector = null;
-    }
-
-
     public void createSelector(int startX, int startY){
-        boolean selectorIsFinished = selector!=null
-                && selector.getState() == Selector.State.FINISH;
-
         //Retrieve the highest value X and Y
         int maxX = tilesetColorsPanel.getWidth();
         int maxY = tilesetColorsPanel.getHeight();
 
-        if (selector == null || selectorIsFinished) {
-            try {
-                selector = new SelectorColor(startX, startY, maxX, maxY);
+        try {
+            selector = new SelectorColor(startX, startY, maxX, maxY);
 
-                //Force colorsTilesetRepresentation to readjust every time selector is resized
-                selector.addPropertyChangeListener(tilesetColorsPanel);
+            //Force colorsTilesetRepresentation to readjust every time this selector is resized
+            selector.addPropertyChangeListener(tilesetColorsPanel);
 
-                //Reload View
-                tilesetColorsPanel.redraw();
-
-            } catch (OutOfBoundsException e) {
-                e.printStackTrace();
-            }
+            //Reload View
+            tilesetColorsPanel.redraw();
+        } catch (OutOfBoundsException e) {
+            e.printStackTrace();
         }
     }
 
@@ -92,9 +69,8 @@ public enum  ColorsTileController {
         }
     }
 
-    public void addToSelection(int endX, int endY) {
-        if (selector != null) {
-            resizeSelector(endX, endY);
+    public void addToSelection() {
+        if (selector != null && !selector.equals(previousSelector)) {
             selector.setState(Selector.State.FINISH);
             tilesetColorsPanel.addSelection(selector);
 
@@ -105,9 +81,8 @@ public enum  ColorsTileController {
         selector = null;
     }
 
-    public void removeFromSelection(int endX, int endY) {
+    public void removeFromSelection() {
         if (selector != null) {
-            resizeSelector(endX, endY);
             selector.setState(Selector.State.FINISH);
             tilesetColorsPanel.removeSelection(selector);
 
@@ -115,6 +90,32 @@ public enum  ColorsTileController {
             tilesetColorsManager.removeSelectedColors(colors);
         }
         selector = null;
+    }
+
+    public void removePreviousSelection() {
+        if (previousSelector != null){
+            boolean isSameSelector = previousSelector.equals(selector);
+
+             if(!isSameSelector) {
+                 tilesetColorsPanel.removeSelection(previousSelector);
+
+                 ArrayList<Color> colors = tilesetColorsPanel.retrieveSelectedColors(previousSelector);
+                 tilesetColorsManager.removeSelectedColors(colors);
+                 previousSelector = null;
+             }
+        }
+    }
+
+    public void clearSelection(){
+        tilesetColorsPanel.clearSelection();
+
+        Iterator<Color> colorsIterator = tilesetColorsManager.getSelectedColors().iterator();
+        while(colorsIterator.hasNext()){
+            colorsIterator.next();
+            colorsIterator.remove();
+        }
+
+        tilesetColorsPanel.redraw();
     }
 
 

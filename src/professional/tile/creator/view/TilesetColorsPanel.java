@@ -73,6 +73,10 @@ public class TilesetColorsPanel extends JPanel implements PropertyChangeListener
         selection.remove(selector);
     }
 
+    public void clearSelection() {
+        selection.clear();
+    }
+
     public void addSelection(SelectorColor selector) {
         selection.add(selector);
     }
@@ -140,7 +144,6 @@ public class TilesetColorsPanel extends JPanel implements PropertyChangeListener
             ArrayList<Color> colors = new ArrayList<>();
             for (int i=start.getY(); i<end.getY(); i+=ColorRepresentation.DIMENSION){
                 for (int j=start.getX(); j<end.getX(); j+=ColorRepresentation.DIMENSION){
-                    System.out.println(j+":"+i);
                     ColorRepresentation rep = (ColorRepresentation) getComponentAt(j, i);
                     colors.add(rep.getBackground());
                 }
@@ -289,6 +292,10 @@ public class TilesetColorsPanel extends JPanel implements PropertyChangeListener
                     add(new Point(relX, relY), new Point(ColorRepresentation.DIMENSION, ColorRepresentation.DIMENSION));
                 }
             }
+        }
+
+        public void clear() {
+            selectedArea = new Area();
         }
     }
 }

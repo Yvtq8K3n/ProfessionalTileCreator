@@ -85,9 +85,11 @@ public class PanelPallet extends JPanel {
 
                 if (isSingleSelectionTab){
                     tilesetColorsPanel.setOperator(TilesetColorsPanel.Operation.SINGLE);
+                    ColorsTileController.INSTANCE.clearSelection();
                 }
                 if (isMultiSelectionTab){
                     tilesetColorsPanel.setOperator(TilesetColorsPanel.Operation.MULTI);
+                    ColorsTileController.INSTANCE.clearSelection();
                 }
             }
         });

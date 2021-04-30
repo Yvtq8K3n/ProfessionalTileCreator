@@ -7,7 +7,9 @@ import java.awt.event.MouseEvent;
 public class OperatorSingleColorSelection extends Operator {
     @Override
     public void mousePressed(MouseEvent e) {
-        ColorsTileController.INSTANCE.createSimpleSelector(e.getX(), e.getY());
+        ColorsTileController.INSTANCE.removePreviousSelection();
+        ColorsTileController.INSTANCE.createSelector(e.getX(), e.getY());
+        ColorsTileController.INSTANCE.addToSelection();
         System.out.println("ColorSelection: CREATING");
     }
 

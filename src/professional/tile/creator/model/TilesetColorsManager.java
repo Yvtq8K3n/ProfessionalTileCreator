@@ -1,6 +1,5 @@
 package professional.tile.creator.model;
 
-import professional.tile.creator.exceptions.InvalidOperationException;
 import professional.tile.creator.model.comparison.*;
 
 import java.awt.*;
@@ -89,6 +88,10 @@ public class TilesetColorsManager {
         for (Color color:colors) {
                 selectedColors.remove(color);
         }
+    }
+
+    public void removeSelectedColor(Color color) {
+        selectedColors.remove(color);
     }
 
     public Color getSelectedColor() {

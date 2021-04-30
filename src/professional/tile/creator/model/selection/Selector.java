@@ -35,20 +35,20 @@ public abstract class Selector implements PropertyChangeListener {
     protected abstract void setEndY(int endY) throws OutOfBoundsException;
 
     public void resizeEndCoordinates(Point endCoordinates) throws OutOfBoundsException{
-        Boolean resizeFailed=false;
+        OutOfBoundsException e = null;
         try{
             setEndX(endCoordinates.getX());
         }catch (OutOfBoundsException ex){
-            resizeFailed=true;
+            e = ex;
         }
         try{
             setEndY(endCoordinates.getY());
         }catch (OutOfBoundsException ex){
-            resizeFailed=true;
+            e = ex;
         }
         setState(SelectorTileset.State.RESIZING);
         changes.firePropertyChange("selectorResized",  null, endCoordinates);
-        if (resizeFailed) throw new OutOfBoundsException("Selector:");
+        if (e!=null) throw e;
     }
 
     public Point getLowestPoint(){
