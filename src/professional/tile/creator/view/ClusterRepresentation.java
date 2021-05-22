@@ -10,7 +10,7 @@ import professional.tile.creator.controller.TilesetController;
 import professional.tile.creator.controller.operators.*;
 import professional.tile.creator.model.TilesetColorsManager;
 import professional.tile.creator.view.components.ColorRepresentation;
-import professional.tile.creator.view.components.InterativeChart;
+import professional.tile.creator.view.components.InteractiveChart;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,16 +23,13 @@ public class ClusterRepresentation extends JPanel{
     protected TilesetColorsManager colorManager;
 
     //Chart: Red x Green
-    ColorsChart colorsChartRG;
-    XChartPanel<BubbleChart> chartPanelRG;
+    InteractiveChart chartPanelRG;
 
     //Chart: Red x Blue
-    ColorsChart colorsChartRB;
-    XChartPanel<BubbleChart> chartPanelRB;
+    InteractiveChart chartPanelRB;
 
     //Chart: Green x Blue
-    ColorsChart colorsChartGB;
-    XChartPanel<BubbleChart> chartPanelGB;
+    InteractiveChart chartPanelGB;
 
     public ClusterRepresentation() {
         setLayout(new GridLayout(3, 0));
@@ -44,37 +41,20 @@ public class ClusterRepresentation extends JPanel{
     }
 
     private void initComponents() {
-        colorsChartRG = new ColorsChart();
-        chartPanelRG = (XChartPanel<BubbleChart>) colorsChartRG.getEmptyChart();
+        chartPanelRG = new InteractiveChart();
         add(chartPanelRG);
 
-        colorsChartRB = new ColorsChart();
-        chartPanelRB = (XChartPanel<BubbleChart>) colorsChartRB.getEmptyChart();
+        chartPanelRB = new InteractiveChart();
         add(chartPanelRB);
 
-        colorsChartGB = new ColorsChart();
-        chartPanelGB = (XChartPanel<BubbleChart>) colorsChartGB.getEmptyChart();
+        chartPanelGB = new InteractiveChart();
         add(chartPanelGB);
     }
 
     public void reloadTilesetColors() {
-        remove(chartPanelRG);
-        colorsChartRG = new ColorsChart(EnumColor.RED, EnumColor.GREEN);
-        colorsChartRG.setColors(colorManager.getColors());
-        chartPanelRG = (XChartPanel<BubbleChart>) colorsChartRG.buildPanel();
-        add(chartPanelRG);
-
-        remove(chartPanelRB);
-        colorsChartRB = new ColorsChart(EnumColor.RED, EnumColor.BLUE);
-        colorsChartRB.setColors(colorManager.getColors());
-        chartPanelRB = (XChartPanel<BubbleChart>) colorsChartRB.buildPanel();
-        add(chartPanelRB);
-
-        remove(chartPanelGB);
-        colorsChartGB = new ColorsChart(EnumColor.GREEN, EnumColor.BLUE);
-        colorsChartGB.setColors(colorManager.getColors());
-        chartPanelGB = (XChartPanel<BubbleChart>) colorsChartGB.buildPanel();
-        add(chartPanelGB);
+        chartPanelRG.setTilesetColors(colorManager.getColors(), EnumColor.RED, EnumColor.GREEN);
+        chartPanelRB.setTilesetColors(colorManager.getColors(), EnumColor.RED, EnumColor.BLUE);
+        chartPanelGB.setTilesetColors(colorManager.getColors(), EnumColor.GREEN, EnumColor.BLUE);
 
         redraw();
     }
