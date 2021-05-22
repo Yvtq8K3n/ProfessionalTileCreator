@@ -7,6 +7,7 @@ import professional.tile.creator.model.TilesetManager;
 import professional.tile.creator.model.TilesetColorsManager;
 import professional.tile.creator.model.comparison.*;
 import professional.tile.creator.model.selection.Selector;
+import professional.tile.creator.model.selection.SelectorChart;
 import professional.tile.creator.model.selection.SelectorColor;
 import professional.tile.creator.view.ClusterRepresentation;
 import professional.tile.creator.view.ColorReplacer;
@@ -23,6 +24,8 @@ public enum  ColorsTileController {
     private TilesetColorsManager tilesetColorsManager;
     private SelectorColor selector;
     private SelectorColor previousSelector;
+    private SelectorChart selectorChart;
+
 
     //View
     private TilesetColorsPanel tilesetColorsPanel;
@@ -171,6 +174,21 @@ public enum  ColorsTileController {
 
     public Color getSelectedColor(){
         return this.tilesetColorsManager.getSelectedColor();
+    }
+
+    public void createChartSelector(int x, int y) {
+        try {
+            selectorChart = new SelectorChart(x, y, 0, 0);
+
+            //Force colorsTilesetRepresentation to readjust every time this selector is resized
+            //selector.addPropertyChangeListener(tilesetColorsPanel);
+            //clusterRepresentation
+
+            //Reload View
+            tilesetColorsPanel.redraw();
+        } catch (OutOfBoundsException e) {
+            e.printStackTrace();
+        }
     }
 
     public void setClusterRepresentation(ClusterRepresentation clusterRepresentation) {

@@ -2,6 +2,7 @@ package professional.tile.creator.model.selection;
 import professional.tile.creator.exceptions.OutOfBoundsException;
 import professional.tile.creator.model.Point;
 
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
@@ -85,5 +86,8 @@ public abstract class Selector implements PropertyChangeListener {
         changes.addPropertyChangeListener(l);
     }
 
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
 
+    }
 }

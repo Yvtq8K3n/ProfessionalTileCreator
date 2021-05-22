@@ -6,6 +6,7 @@ import professional.tile.creator.model.Point;
 import professional.tile.creator.model.TilesetManager;
 import professional.tile.creator.model.selection.Selector;
 import professional.tile.creator.model.selection.SelectorTileset;
+import professional.tile.creator.view.ClusterRepresentation;
 import professional.tile.creator.view.TileRepresentation;
 
 import java.awt.image.BufferedImage;
@@ -19,6 +20,7 @@ public enum TilesetController {
 
     //View
     private TileRepresentation tileRepresentation;
+    private ClusterRepresentation clusterRepresentation;
 
     public void loadTileset(BufferedImage tileset){
         this.selector = null;
@@ -98,5 +100,9 @@ public enum TilesetController {
         if (scaleFactor<3){
             tilesetManager.increaseScaleFactor();
         }
+    }
+
+    public void setClusterRepresentation(ClusterRepresentation clusterRepresentation) {
+        this.clusterRepresentation = clusterRepresentation;
     }
 }

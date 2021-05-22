@@ -93,9 +93,4 @@ public class SelectorColor extends Selector {
         }
         return false;
     }
-
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-
-    }
 }
