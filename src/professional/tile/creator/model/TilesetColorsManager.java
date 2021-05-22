@@ -12,6 +12,9 @@ import java.util.Collections;
 import java.util.List;
 
 public class TilesetColorsManager {
+    private final int COLOR_BASE = 8;
+    private final int MAX_COLOR_VALUE = 248;
+
     private TilesetManager tilesetManager;
     private Color[] colors;
 
@@ -27,7 +30,7 @@ public class TilesetColorsManager {
 
     public TilesetColorsManager(TilesetManager tilesetManager) {
         this.tilesetManager = tilesetManager;
-        this.colors = extractTilesetColors();
+        this.colors = processTileset();
 
         setSortComparator(CompareColorsByStepInvertSorting.CRITERIA);
         this.selectedColors = new ArrayList<>();
@@ -39,14 +42,17 @@ public class TilesetColorsManager {
     // < if color lowered goes back
     // > if color is higher goes front
     // Need to be organized in some kind of visualization patterns
-    private Color[] extractTilesetColors(){
+    private Color[] processTileset(){
         BufferedImage image = tilesetManager.getImage();
         List<Color> colors =  new ArrayList<>();
 
         for (int x = 0; x < image.getWidth(); x++) {
             for (int y = 0; y < image.getHeight(); y++) {
-                Color newColor = new Color(image.getRGB(x, y));
-                if (!colors.contains(newColor)) colors.add(newColor);
+                Color pixelColor = new Color(image.getRGB(x, y));
+                Color converted = round(pixelColor, COLOR_BASE);
+                image.setRGB(x, y, converted.getRGB());
+
+                if (!colors.contains(converted)) colors.add(converted);
             }
         }
 
@@ -69,6 +75,7 @@ public class TilesetColorsManager {
         this.sortedColors = newSortedColors.toArray(new Color[newSortedColors.size()]);
         changes.firePropertyChange("sortedColors",  null, newSortedColors);
     }
+
 
     public void addSelectedColors(ArrayList<Color> colors) {
         selectedColor = colors.get(0);
@@ -104,6 +111,25 @@ public class TilesetColorsManager {
 
     public void removePropertyChangeListener(PropertyChangeListener l) {
         changes.removePropertyChangeListener(l);
+    }
+
+
+    /** Given a
+     * @param color and a
+     * @param base
+     * @return A color with RGB value rounded by a multiple of the given base
+     */
+    protected Color round(Color color, int base){
+        int r = base * Math.floorDiv(color.getRed() + COLOR_BASE/2,base);
+        if (r>MAX_COLOR_VALUE) r = MAX_COLOR_VALUE;
+
+        int g = base * Math.floorDiv(color.getGreen() + COLOR_BASE/2,base);
+        if (g>MAX_COLOR_VALUE) g = MAX_COLOR_VALUE;
+
+        int b = base * Math.floorDiv(color.getBlue() + COLOR_BASE/2,base);
+        if (b>MAX_COLOR_VALUE) b = MAX_COLOR_VALUE;
+
+        return new Color(r, g, b);
     }
 
 }

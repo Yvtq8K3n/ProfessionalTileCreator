@@ -14,8 +14,6 @@ import static javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER;
 import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS;
 
 public class PanelPallet extends JPanel {
-
-
     JTabbedPane tabbedPane;
     ColorReplacer colorReplacer;
     ReplaceColorsMenu replaceColorsMenu;

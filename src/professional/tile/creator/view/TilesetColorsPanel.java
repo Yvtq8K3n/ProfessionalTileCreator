@@ -8,7 +8,6 @@ import professional.tile.creator.controller.operators.OperatorSingleColorSelecti
 import professional.tile.creator.exceptions.InvalidOperationException;
 import professional.tile.creator.model.Point;
 import professional.tile.creator.model.TilesetColorsManager;
-import professional.tile.creator.model.selection.Selector;
 import professional.tile.creator.model.selection.SelectorColor;
 import professional.tile.creator.view.components.ColorRepresentation;
 

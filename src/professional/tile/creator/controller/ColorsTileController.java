@@ -8,6 +8,7 @@ import professional.tile.creator.model.TilesetColorsManager;
 import professional.tile.creator.model.comparison.*;
 import professional.tile.creator.model.selection.Selector;
 import professional.tile.creator.model.selection.SelectorColor;
+import professional.tile.creator.view.ClusterRepresentation;
 import professional.tile.creator.view.ColorReplacer;
 import professional.tile.creator.view.TilesetColorsPanel;
 
@@ -26,6 +27,7 @@ public enum  ColorsTileController {
     //View
     private TilesetColorsPanel tilesetColorsPanel;
     private ColorReplacer colorReplacer;
+    private ClusterRepresentation clusterRepresentation;
 
     public void reloadTilesetColors(TilesetManager tilesetManager){
         //TilesetMenu
@@ -33,6 +35,8 @@ public enum  ColorsTileController {
         this.tilesetColorsManager.addPropertyChangeListener(tilesetColorsPanel);
         this.tilesetColorsPanel.setColorManager(tilesetColorsManager);
         this.tilesetColorsPanel.reloadTilesetColors();
+        this.clusterRepresentation.setColorManager(tilesetColorsManager);
+        this.clusterRepresentation.reloadTilesetColors();
 
         //PanelPallet
         this.tilesetColorsManager.addPropertyChangeListener(colorReplacer);
@@ -167,5 +171,9 @@ public enum  ColorsTileController {
 
     public Color getSelectedColor(){
         return this.tilesetColorsManager.getSelectedColor();
+    }
+
+    public void setClusterRepresentation(ClusterRepresentation clusterRepresentation) {
+        this.clusterRepresentation = clusterRepresentation;
     }
 }
